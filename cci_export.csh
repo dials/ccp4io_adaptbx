@@ -8,11 +8,10 @@ cd /var/tmp
 mkdir cvs_export_$$
 cd cvs_export_$$
 set target="`pwd`"
+cvs export -rHEAD ccp4io_adaptbx
 cvs export -rHEAD ccp4io
 cd $ccp4io
 cvs -q diff -r1.1.1.1 > $target/ccp4io/CCI_PATCHES
-cd ..
-tar cf - ccp4io_adaptbx | (cd $target; tar xf -)
 cd $target
 tar cf ccp4io.tar ccp4io ccp4io_adaptbx
 gzip ccp4io.tar
