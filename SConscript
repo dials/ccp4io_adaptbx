@@ -9,11 +9,15 @@ if (os.path.isfile(libtbx_config_path)):
   config = libtbx.config.read_libtbx_config(path=libtbx_config_path)
   redirection = config.get("redirection", None)
   if (redirection is not None):
+    redirection = os.path.expandvars(redirection)
     if (os.path.isabs(redirection)):
       env_etc.ccp4io_dist = os.path.normpath(redirection)
     else:
       env_etc.ccp4io_dist = env_etc.norm_join(
         env_etc.libtbx_env.dist_path("ccp4io"), redirection)
+if (not os.path.isdir(env_etc.ccp4io_dist)):
+  print "Fatal error: not a directory: %s" % env_etc.ccp4io_dist
+  Exit(1)
 Repository(os.path.dirname(env_etc.ccp4io_dist))
 
 env_etc.ccp4io_include = env_etc.norm_join(env_etc.ccp4io_dist, "lib", "src")
