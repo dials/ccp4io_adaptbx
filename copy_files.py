@@ -1,7 +1,8 @@
 import shutil
 import sys, os
 source_root = sys.argv[1]
-for path in ["lib/src/library_err.c",
+for path in ["academic_software_licence.pdf",
+             "lib/src/library_err.c",
              "lib/src/library_file.c",
              "lib/src/library_utils.c",
              "lib/src/ccp4_array.c",
@@ -29,4 +30,11 @@ for path in ["lib/src/library_err.c",
   dir = os.path.split(path)[0]
   if (dir != "" and not os.path.isdir(dir)):
     os.makedirs(dir)
-  shutil.copyfile(os.path.join(source_root, path), path)
+  lines = []
+  for line in open(os.path.join(source_root, path), "rb"):
+    if (line.lstrip().startswith("static char rcsid")): continue
+    lines.append(line)
+  f = open(path, "wb")
+  for line in lines:
+    f.write(line)
+  f.close()
