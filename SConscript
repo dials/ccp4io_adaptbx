@@ -39,7 +39,7 @@ if (env_etc.static_libraries): builder = env.StaticLibrary
 else:                          builder = env.SharedLibrary
 lib_src = env_etc.norm_join(
   os.path.basename(env_etc.ccp4io_dist), "lib", "src")
-builder(target='#libtbx/cmtz',
+builder(target='#lib/cmtz',
   source = ["#" + env_etc.norm_join(lib_src, file_name) for file_name in [
     "library_err.c",
     "library_file.c",
