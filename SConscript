@@ -19,13 +19,16 @@ env = env_base.Copy(
   CXXFLAGS=mycxxflags_base,
   CCFLAGS=myccflags_base,
 )
-
-env.StaticLibrary(target='#libtbx/cmtz',
+env.Append(LIBS=env_etc.libm)
+if (env_etc.static_libraries): builder = env.StaticLibrary
+else:                          builder = env.SharedLibrary
+builder(target='#libtbx/cmtz',
   source = ["../ccp4io/lib/src/library_err.c",
             "../ccp4io/lib/src/library_file.c",
             "../ccp4io/lib/src/library_utils.c",
             "../ccp4io/lib/src/ccp4_array.c",
             "../ccp4io/lib/src/ccp4_parser.c",
+            "../ccp4io/lib/src/ccp4_unitcell.c",
             "../ccp4io/lib/src/cvecmat.c",
             "../ccp4io/lib/src/cmtzlib.c",
             "../ccp4io/lib/src/csymlib.c",
