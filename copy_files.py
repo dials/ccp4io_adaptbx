@@ -26,6 +26,7 @@ for path in ["academic_software_licence.pdf",
              "lib/src/cvecmat.h",
              "lib/src/csymlib.h",
              "lib/src/ccp4_file_err.h",
+             "lib/data/symop.lib",
             ]:
   print path
   dir = os.path.split(path)[0]
