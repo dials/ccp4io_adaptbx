@@ -10,14 +10,12 @@ if (sys.platform == "win32"):
 else:
   env_etc.ccp4io_defines = []
 
-myccflags_base = env_etc.ccflags_base[:]
-myccflags_base.extend(env_etc.ccp4io_defines)
-mycxxflags_base = env_etc.cxxflags_base[:]
-mycxxflags_base.extend(env_etc.ccp4io_defines)
+ccflags = env_etc.ccflags_base[:]
+ccflags.extend(env_etc.ccp4io_defines)
 
 env = env_base.Copy(
-  CXXFLAGS=mycxxflags_base,
-  CCFLAGS=myccflags_base,
+  CCFLAGS=ccflags,
+  SHCCFLAGS=ccflags,
 )
 env.Append(LIBS=env_etc.libm)
 if (env_etc.static_libraries): builder = env.StaticLibrary
