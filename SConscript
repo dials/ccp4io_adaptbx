@@ -17,6 +17,7 @@ ccflags.extend(env_etc.ccp4io_defines)
 env = env_base.Copy(
   CCFLAGS=ccflags,
   SHCCFLAGS=ccflags,
+  SHLINKFLAGS=env_etc.shlinkflags,
 )
 env.Append(LIBS=env_etc.libm)
 if (env_etc.static_libraries): builder = env.StaticLibrary
