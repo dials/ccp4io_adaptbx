@@ -20,7 +20,6 @@ env = env_base.Copy(
   SHLINKFLAGS=env_etc.shlinkflags,
 )
 env.Append(LIBS=env_etc.libm)
-env_etc.disable_strict_aliasing(env=env)
 if (env_etc.static_libraries): builder = env.StaticLibrary
 else:                          builder = env.SharedLibrary
 if (   os.path.normcase(os.path.dirname(env_etc.ccp4io_dist))
