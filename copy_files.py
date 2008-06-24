@@ -32,11 +32,4 @@ for path in ["academic_software_licence.pdf",
   dir = os.path.split(path)[0]
   if (dir != "" and not os.path.isdir(dir)):
     os.makedirs(dir)
-  lines = []
-  for line in open(os.path.join(source_root, path), "rb"):
-    if (line.lstrip().startswith("static char rcsid")): continue
-    lines.append(line)
-  f = open(path, "wb")
-  for line in lines:
-    f.write(line)
-  f.close()
+  open(path, "wb").write(open(os.path.join(source_root, path), "rb").read())
