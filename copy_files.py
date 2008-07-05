@@ -1,8 +1,7 @@
 import shutil
 import sys, os
 source_root = sys.argv[1]
-for path in ["academic_software_licence.pdf",
-             "lib/src/library_err.c",
+for path in ["lib/src/library_err.c",
              "lib/src/library_file.c",
              "lib/src/library_utils.c",
              "lib/src/ccp4_array.c",
