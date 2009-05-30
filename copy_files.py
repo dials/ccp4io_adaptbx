@@ -41,6 +41,22 @@ for path in ["lib/src/library_err.c",
              "lib/src/cmap_stats.h",
              "lib/src/cmap_symop.c",
              "lib/src/cmaplib.h",
+
+             "lib/src/ccp4_diskio_f.c",
+             "lib/src/ccp4_fortran.h",
+             "lib/src/ccp4_general.c",
+             "lib/src/ccp4_general.h",
+             "lib/src/ccp4_general_f.c",
+             "lib/src/ccp4_parser_f.c",
+             "lib/src/ccp4_program.c",
+             "lib/src/ccp4_program.h",
+             "lib/src/ccp4_unitcell_f.c",
+             "lib/src/cmaplib_f.c",
+             "lib/src/cmaplib_f.h",
+             "lib/src/cmtzlib_f.c",
+             "lib/src/csymlib_f.c",
+             "lib/src/library_f.c",
+
              "lib/data/symop.lib",
             ]:
   print path
