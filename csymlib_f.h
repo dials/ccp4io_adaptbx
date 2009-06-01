@@ -1,3 +1,6 @@
+#ifndef CCP4IO_ADAPTBX_CSYMLIB_F_H
+#define CCP4IO_ADAPTBX_CSYMLIB_F_H
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -13,6 +16,11 @@
 #define MAXSYM 192
 #define MAXSYMOPS 20
 #define MAXLENSYMOPSTR 80
+
+#ifdef  __cplusplus
+namespace CSym {
+extern "C" {
+#endif
 
 FORTRAN_SUBR ( INVSYM, invsym,
                (const float a[4][4], float ai[4][4]),
@@ -314,3 +322,9 @@ FORTRAN_SUBR ( HANDCHANGE, handchange,
                (const int *lspgrp, float *cx, float *cy, float *cz),
                (const int *lspgrp, float *cx, float *cy, float *cz),
                (const int *lspgrp, float *cx, float *cy, float *cz));
+
+#ifdef __cplusplus
+} }
+#endif
+
+#endif // GUARD
