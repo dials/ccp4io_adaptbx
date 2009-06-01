@@ -12,7 +12,6 @@
 #include "ccp4_program.h"
 #include "ccp4_general.h"
 
-#define MFILES 9
 #define MAXSYM 192
 
 #ifdef  __cplusplus
