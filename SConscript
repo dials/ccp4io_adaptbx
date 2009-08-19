@@ -11,14 +11,9 @@ if (sys.platform == "win32"):
 else:
   env_etc.ccp4io_defines = []
 
-ccflags = env_etc.ccflags_base[:]
-ccflags.extend(env_etc.ccp4io_defines)
-
-env = env_base.Copy(
-  CCFLAGS=ccflags,
-  SHCCFLAGS=ccflags,
-  SHLINKFLAGS=env_etc.shlinkflags,
-)
+env = env_base.Clone(
+  SHLINKFLAGS=env_etc.shlinkflags)
+env.Append(SHCCFLAGS=env_etc.ccp4io_defines)
 env_etc.include_registry.append(
     env=env,
     paths=[env_etc.ccp4io_include])
