@@ -13,6 +13,7 @@ else:
 
 env = env_base.Clone(
   SHLINKFLAGS=env_etc.shlinkflags)
+env.Append(CCFLAGS=env_etc.ccp4io_defines)
 env.Append(SHCCFLAGS=env_etc.ccp4io_defines)
 env_etc.include_registry.append(
     env=env,
