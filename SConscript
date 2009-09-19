@@ -68,7 +68,7 @@ if (env_etc.ccp4io_has_f_c): # for C++ resolve
 probe_file_name = os.path.join(env_etc.ccp4io_dist,
   "lib", "src", "mmdb", "mmdb_rwbrook.h")
 env_etc.ccp4io_has_mmdb = os.path.isfile(probe_file_name)
-if (env_etc.ccp4io_has_mmdb): # for C++ resolve
+if (env_etc.ccp4io_has_mmdb and os.name != "nt"): # for C++ resolve
   c_files.extend("""\
 mmdb/bfgs_min.cpp
 mmdb/file_.cpp
