@@ -33,7 +33,9 @@ FORTRAN_SUBR ( CCP4H_INIT_LIB, ccp4h_init_lib,
                (int* ihtml, int* isumm),
                (int* ihtml, int* isumm),
                (int* ihtml, int* isumm))
-{ bail("ccp4h_init_lib"); }
+{
+  // ignoring calls from mtzini() in cmtzlib_f.c
+}
 
 FORTRAN_SUBR ( CCP4H_PRE_BEG, ccp4h_pre_beg,
                (),
