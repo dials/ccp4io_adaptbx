@@ -1,3 +1,5 @@
+from libtbx.utils import Sorry
+from libtbx.str_utils import show_string
 import libtbx.load_env
 import sys, os
 
@@ -50,26 +52,28 @@ if (env_etc.ccp4io_has_cmaplib):
     "cmap_stats.c",
     "cmap_symop.c",
 ])
-probe_file_name = os.path.join(env_etc.ccp4io_dist,
-  "lib", "src", "ccp4_fortran.h")
-env_etc.ccp4io_has_f_c = os.path.isfile(probe_file_name)
-if (env_etc.ccp4io_has_f_c): # for C++ resolve
-  c_files.extend([
-    "ccp4_diskio_f.c",
-    "ccp4_general.c",
-    "ccp4_general_f.c",
-    "ccp4_parser_f.c",
-    "ccp4_program.c",
-    "ccp4_unitcell_f.c",
-    "cmaplib_f.c",
-    "cmtzlib_f.c",
-    "csymlib_f.c",
-    "library_f.c"])
-probe_file_name = os.path.join(env_etc.ccp4io_dist,
-  "lib", "src", "mmdb", "mmdb_rwbrook.h")
-env_etc.ccp4io_has_mmdb = os.path.isfile(probe_file_name)
-if (env_etc.ccp4io_has_mmdb and os.name != "nt"): # for C++ resolve
+need_f_c = libtbx.env.has_module("solve_resolve")
+if (need_f_c):
+  for probe_file_name in [
+        "lib/src/ccp4_fortran.h",
+        "lib/src/mmdb/mmdb_rwbrook.h"]:
+    probe_file_name = os.path.join(env_etc.ccp4io_dist, probe_file_name)
+    if (not os.path.isfile(probe_file_name)):
+      raise Sorry("""\
+Required source file not found: %s
+  Please update the ccp4io sources or re-run libtbx/configure.py
+  without requesting solve_resolve.""" % show_string(probe_file_name))
   c_files.extend("""\
+ccp4_diskio_f.c
+ccp4_general.c
+ccp4_general_f.c
+ccp4_parser_f.c
+ccp4_program.c
+ccp4_unitcell_f.c
+cmaplib_f.c
+cmtzlib_f.c
+csymlib_f.c
+library_f.c
 mmdb/bfgs_min.cpp
 mmdb/file_.cpp
 mmdb/hybrid_36.cpp
@@ -106,7 +110,7 @@ mmdb/stream_.cpp
 """.splitlines())
 prefix = "#"+os.path.join(os.path.basename(env_etc.ccp4io_dist), "lib", "src")
 source = [os.path.join(prefix, file_name) for file_name in c_files]
-if (env_etc.ccp4io_has_f_c):
+if (need_f_c):
   source.append(os.path.join("#ccp4io_adaptbx", "fortran_call_stubs.c"))
 builder(target='#lib/ccp4io', source=source)
 env_etc.ccp4io_lib = "ccp4io"
