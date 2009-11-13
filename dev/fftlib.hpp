@@ -1,9 +1,10 @@
-#ifndef RESOLVE_FFTLIB_HPP
-#define RESOLVE_FFTLIB_HPP
+// NOT USED -- INCOMPLETE -- DOES NOT COMPILE
+// here for future reference
 
-#include <resolve/umbrella.hpp>
+#ifndef CCP4IO_ADAPTBX_DEV_FFTLIB_HPP
+#define CCP4IO_ADAPTBX_DEV_FFTLIB_HPP
 
-namespace resolve {
+namespace ccp4io_dev {
 
 void
 cmplft(
@@ -52,6 +53,6 @@ inv21(
   int5a d
 );
 
-} // namespace resolve
+} // namespace ccp4io_dev
 
 #endif // GUARD

@@ -1,5 +1,8 @@
+# NOT USED -- INCOMPLETE -- DOES NOT RUN
+# here for future reference
+
 from __future__ import division
-from solve_resolve import resolve
+import ccp4io_dev_ext
 import scitbx.fftpack
 from scitbx.array_family import flex
 from libtbx.test_utils import approx_equal
@@ -15,7 +18,7 @@ def compare_fftpack_with_cmplft_1d():
     z = (mt.random_double(size=n*2)*2-1).as_float()
     cmplft_xy = z.deep_copy()
     d = flex.int((2*n,2,2*n,2*n,2*n))
-    resolve.fftlib_cmplft(xy=cmplft_xy, n=n, d=d)
+    ccp4io_dev_ext.fftlib_cmplft(xy=cmplft_xy, n=n, d=d)
     fft = scitbx.fftpack.complex_to_complex(n)
     fftpack_xy = z.as_double()
     fft.forward(fftpack_xy)
@@ -29,11 +32,11 @@ def compare_fftpack_with_cmplft_3d():
     z = (mt.random_double(size=2*nx*ny*nz)*2-1).as_float()
     cmplft_xy = z.deep_copy()
     d = flex.int([2*nx*ny*nz, 2*nx*ny, 2*nx*ny*nz, 2*nx*ny, 2])
-    resolve.fftlib_cmplft(xy=cmplft_xy, n=nz, d=d)
+    ccp4io_dev_ext.fftlib_cmplft(xy=cmplft_xy, n=nz, d=d)
     d = flex.int([2*nx*ny*nz, 2*nx, 2*nx*ny, 2*nx, 2])
-    resolve.fftlib_cmplft(xy=cmplft_xy, n=ny, d=d)
+    ccp4io_dev_ext.fftlib_cmplft(xy=cmplft_xy, n=ny, d=d)
     d = flex.int([2*nx*ny*nz, 2, 2*nx*ny*nz, 2*nx*ny*nz, 2*nx])
-    resolve.fftlib_cmplft(xy=cmplft_xy, n=nx, d=d)
+    ccp4io_dev_ext.fftlib_cmplft(xy=cmplft_xy, n=nx, d=d)
     fft = scitbx.fftpack.complex_to_complex_3d((nz,ny,nx))
     fftpack_xy = z.as_double()
     fftpack_xy.reshape(flex.grid(nz,ny,2*nx))
@@ -52,7 +55,7 @@ def compare_fftpack_with_realft_1d():
     z = (mt.random_double(size=m_real)*2-1).as_float()
     realft_xy = z.deep_copy()
     d = flex.int((m_real,2,m_real,m_real,m_real))
-    resolve.fftlib_realft(xy=realft_xy, n=n_cmpl, d=d)
+    ccp4io_dev_ext.fftlib_realft(xy=realft_xy, n=n_cmpl, d=d)
     fft = scitbx.fftpack.real_to_complex(n_real)
     assert fft.m_real() == m_real
     fftpack_xy = z.as_double()
@@ -79,7 +82,7 @@ def compare_fftpack_with_hermft_1d():
     hermft_xy[-2] = 253
       # random value, for consistency check below
     d = flex.int((m_real,2,m_real,m_real,m_real))
-    resolve.fftlib_hermft(xy=hermft_xy, n=n_cmpl, d=d)
+    ccp4io_dev_ext.fftlib_hermft(xy=hermft_xy, n=n_cmpl, d=d)
     # consistency check first
     assert hermft_xy[-2] == 253
     assert hermft_xy[-1] == z[-1]
@@ -108,11 +111,11 @@ def exercise_fftlib_real_complex_3d_real_imag_w_given_dims(
   map_size = nu * nv * (nw+2)
   map = (mt.random_double(size=map_size)*2-1).as_float()
   x = map.deep_copy()
-  resolve.fftlib_real_to_complex_3d_real_imag_w(
+  ccp4io_dev_ext.fftlib_real_to_complex_3d_real_imag_w(
     x=x, nu=nu, nv=nv, nw=nw, complete=True)
   f = x.deep_copy()
-  resolve.hermitian_conjugate_3d_real_imag_w(x=x, nu=nu, nv=nv, nw=nw)
-  resolve.fftlib_complex_to_real_3d_real_imag_w(
+  ccp4io_dev_ext.hermitian_conjugate_3d_real_imag_w(x=x, nu=nu, nv=nv, nw=nw)
+  ccp4io_dev_ext.fftlib_complex_to_real_3d_real_imag_w(
     x=x, nu=nu, nv=nv, nw=nw, complete=True)
   x *= 1/(nu*nv*nw)
   xfocus = x[:nu*nv*nw]
@@ -139,10 +142,10 @@ def exercise_fftlib_real_complex_3d_real_imag_w_given_dims(
           assert approx_equal(fe, ge, eps=1e-4)
   #
   y = map.deep_copy()
-  resolve.fftlib_real_to_complex_3d_real_imag_w(
+  ccp4io_dev_ext.fftlib_real_to_complex_3d_real_imag_w(
     x=y, nu=nu, nv=nv, nw=nw, complete=False)
-  resolve.hermitian_conjugate_3d_real_imag_w(x=y, nu=nu, nv=nv, nw=nw)
-  resolve.fftlib_complex_to_real_3d_real_imag_w(
+  ccp4io_dev_ext.hermitian_conjugate_3d_real_imag_w(x=y, nu=nu, nv=nv, nw=nw)
+  ccp4io_dev_ext.fftlib_complex_to_real_3d_real_imag_w(
     x=y, nu=nu, nv=nv, nw=nw, complete=False)
   y *= 1/(nu*nv*nw)
   show_complete_true_false_cc(nu, nv, nw, (x, y), verbose)
@@ -163,10 +166,10 @@ def compare_large_3d_real_imag_w_complete_true_false(verbose):
   recycled = []
   for complete in [True, False]:
     x = map.deep_copy()
-    resolve.fftlib_real_to_complex_3d_real_imag_w(
+    ccp4io_dev_ext.fftlib_real_to_complex_3d_real_imag_w(
       x=x, nu=nu, nv=nv, nw=nw, complete=complete)
-    resolve.hermitian_conjugate_3d_real_imag_w(x=x, nu=nu, nv=nv, nw=nw)
-    resolve.fftlib_complex_to_real_3d_real_imag_w(
+    ccp4io_dev_ext.hermitian_conjugate_3d_real_imag_w(x=x, nu=nu, nv=nv, nw=nw)
+    ccp4io_dev_ext.fftlib_complex_to_real_3d_real_imag_w(
       x=x, nu=nu, nv=nv, nw=nw, complete=complete)
     recycled.append(x[:nu*nv*nw])
   show_complete_true_false_cc(nu, nv, nw, recycled, verbose)

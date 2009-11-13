@@ -1,3 +1,6 @@
+// NOT USED -- INCOMPLETE -- DOES NOT COMPILE
+// here for future reference
+
 //
 //     fftlib.f: fast-fourier transform library routines
 //     Copyright (C)  Lynn Ten Eyck
@@ -22,15 +25,14 @@
 //**** FOLLOWING ARE ROUTINES USED BY TEN EYCK'S FFT PROGRAMS***
 //
 
-#include <resolve/fftlib.hpp>
-#include <resolve/low_level_utils.hpp>
+#include <ccp4io_adaptbx/dev/fftlib.hpp>
 
 #include <ObjexxFCL/Fmath.hh>
 
 #include <algorithm>
 #include <iostream>
 
-namespace resolve {
+namespace ccp4io_dev {
 
 namespace {
 
@@ -1180,7 +1182,7 @@ diprp(
       u(k) = (lk - dk)*psym;
       mods = k;
     }
-    RESOLVE_ASSERT(mods >= 2);
+    ASSERTBX(mods >= 2);
     onemod = mods < 3;
     if ( ! onemod ) {
       for ( int j = 3; j <= mods; ++j ) {
@@ -1971,4 +1973,4 @@ inv21(
 
 }
 
-} // namespace resolve
+} // namespace ccp4io_dev
