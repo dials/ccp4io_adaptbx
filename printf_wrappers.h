@@ -3,6 +3,10 @@
 
 #include <stdio.h>
 
+#ifdef  __cplusplus
+extern "C" {
+#endif
+
 extern int ccp4io_printf_mode;
 
 int
@@ -17,5 +21,9 @@ ccp4io_fprintf(
   const char* format,
   ...)
 ;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* GUARD */
