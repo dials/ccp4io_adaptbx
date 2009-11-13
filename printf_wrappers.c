@@ -3,7 +3,7 @@
 
 int ccp4io_printf_mode = 1;
 
-int
+void
 ccp4io_printf(
   const char* format,
   ...)
@@ -16,7 +16,7 @@ ccp4io_printf(
   va_end(arg);
 }
 
-int
+void
 ccp4io_fprintf(
   FILE* stream,
   const char* format,
