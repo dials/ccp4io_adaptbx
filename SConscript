@@ -88,50 +88,13 @@ if (env_etc.ccp4io_has_cmaplib):
 need_f_c = libtbx.env.has_module("solve_resolve")
 if (need_f_c):
   for probe_file_name in [
-        "lib/src/ccp4_fortran.h",
-        "lib/src/mmdb/mmdb_rwbrook.h"]:
+        "lib/src/ccp4_fortran.h"]:
     probe_file_name = op.join(env_etc.ccp4io_dist, probe_file_name)
     if (not op.isfile(probe_file_name)):
       raise Sorry("""\
 Required source file not found: %s
   Please update the ccp4io sources or re-run libtbx/configure.py
   without requesting solve_resolve.""" % show_string(probe_file_name))
-  #
-  c_files.extend("""\
-mmdb/bfgs_min.cpp
-mmdb/file_.cpp
-mmdb/hybrid_36.cpp
-mmdb/linalg_.cpp
-mmdb/machine_.cpp
-mmdb/math_.cpp
-mmdb/mattype_.cpp
-mmdb/mmdb_align.cpp
-mmdb/mmdb_atom.cpp
-mmdb/mmdb_bondmngr.cpp
-mmdb/mmdb_chain.cpp
-mmdb/mmdb_cifdefs.cpp
-mmdb/mmdb_coormngr.cpp
-mmdb/mmdb_cryst.cpp
-mmdb/mmdb_ficif.cpp
-mmdb/mmdb_file.cpp
-mmdb/mmdb_graph.cpp
-mmdb/mmdb_manager.cpp
-mmdb/mmdb_mask.cpp
-mmdb/mmdb_mmcif.cpp
-mmdb/mmdb_model.cpp
-mmdb/mmdb_rwbrook.cpp
-mmdb/mmdb_sbase.cpp
-mmdb/mmdb_sbase0.cpp
-mmdb/mmdb_selmngr.cpp
-mmdb/mmdb_symop.cpp
-mmdb/mmdb_tables.cpp
-mmdb/mmdb_title.cpp
-mmdb/mmdb_uddata.cpp
-mmdb/mmdb_utils.cpp
-mmdb/mmdb_xml.cpp
-mmdb/random_n.cpp
-mmdb/stream_.cpp
-""".splitlines())
 
 prefix = "#"+op.join(op.basename(env_etc.ccp4io_dist), "lib", "src")
 for file_name in c_files:
