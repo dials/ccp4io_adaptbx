@@ -2358,7 +2358,8 @@ C
 C
 C
 C     ===============================
-      SUBROUTINE PRMVCI(PERM,JV,N,N1)
+c "OLD_" added to avoid clash with PRMVCI, PRMVCR in newer fftlib.f
+      SUBROUTINE OLD_PRMVCI(PERM,JV,N,N1)
 C     ===============================
 C
 C---- Permute vector JV(N,3) by permutation matrix PERM
@@ -2398,7 +2399,7 @@ C
 C
 C
 C     ===============================
-      SUBROUTINE PRMVCR(PERM,AV,N,N1)
+      SUBROUTINE OLD_PRMVCR(PERM,AV,N,N1)
 C     ===============================
 C
 C---- Permute vector AV(N,3) by permutation vector KP
