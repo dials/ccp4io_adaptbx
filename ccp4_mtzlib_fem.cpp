@@ -1,151 +1,11 @@
 #include <fem.hpp> // Fortran EMulation library of fable module
 
-#include "ccp4_calls_fem.hpp"
+#include "ccp4_mtzlib_fem.hpp"
 #include "ccp4_calls_extern_c.hpp"
 
-namespace ccp4_calls_fem {
+namespace ccp4_mtzlib_fem {
 
 using namespace fem::major_types;
-
-void
-lerror(
-  int const& errflg,
-  int const& ifail,
-  str_cref errmsg)
-{
-  throw BOOST_ADAPTBX_NOT_IMPLEMENTED();
-}
-
-void
-symfr2(
-  str_cref icol,
-  int const& i1,
-  int& ns,
-  arr_ref<float, 3> rot)
-{
-  symfr2_(
-    icol.elems(),
-    &i1,
-    &ns,
-    rot.begin(),
-    icol.len());
-}
-
-void
-msymlb(
-  int const& ist,
-  int& lspgrp,
-  str_ref namspg,
-  str_ref nampg,
-  int& nsymp,
-  int& nsym,
-  arr_ref<float, 3> rot)
-{
-  msymlb_(
-    &ist, &lspgrp, namspg.elems(), nampg.elems(), &nsymp, &nsym, rot.begin(),
-    namspg.len(), nampg.len());
-}
-
-void
-symtr3(
-  int const& nsm,
-  arr_cref<float, 3> rsm,
-  str_arr_ref<> symchs,
-  int const& iprint)
-{
-  symtr3_(&nsm, rsm.begin(), symchs.begin(), &iprint, symchs.len());
-}
-
-void
-asuset(
-  str_cref spgnam,
-  int const& numsgp,
-  str_ref pgname,
-  int const& msym,
-  arr_ref<float, 3> rrsym,
-  int& msymp,
-  int& mlaue,
-  bool const& lprint)
-{
-  ccp4_ftn_logical lprint_ = lprint;
-  asuset_(
-    spgnam.elems(),
-    &numsgp,
-    pgname.elems(),
-    &msym,
-    rrsym.begin(),
-    &msymp,
-    &mlaue,
-    &lprint_,
-    spgnam.len(),
-    pgname.len());
-}
-
-void
-mwrhdl(
-  int const& iunit,
-  str_cref mapnam,
-  str_cref title,
-  int const& nsec,
-  arr_cref<int> iuvw,
-  arr_cref<int> mxyz,
-  int const& nw1,
-  int const& nu1,
-  int const& nu2,
-  int const& nv1,
-  int const& nv2,
-  arr_cref<float> cell,
-  int const& lspgrp,
-  int& lmode)
-{
-  mwrhdl_(
-    &iunit,
-    mapnam.elems(),
-    title.elems(),
-    &nsec,
-    iuvw.begin(),
-    mxyz.begin(),
-    &nw1,
-    &nu1,
-    &nu2,
-    &nv1,
-    &nv2,
-    cell.begin(),
-    &lspgrp,
-    &lmode,
-    mapnam.len(),
-    title.len());
-}
-
-void
-mwrsec(
-  int const& iunit,
-  arr_cref<float, 2> x,
-  int const& mu,
-  int const& mv,
-  int const& iu1,
-  int const& iu2,
-  int const& iv1,
-  int const& iv2)
-{
-  mwrsec_(&iunit, x.begin(), &mu, &mv, &iu1, &iu2, &iv1, &iv2);
-}
-
-void
-mwclose(
-  int const& iunit)
-{
-  mwclose_(&iunit);
-}
-
-void
-msywrt(
-  int const& iunit,
-  int const& nsym,
-  arr_cref<float, 3> rot)
-{
-  msywrt_(&iunit, &nsym, rot.begin());
-}
 
 void
 lwrefl(
@@ -153,15 +13,6 @@ lwrefl(
   arr_cref<float> adata)
 {
   lwrefl_(&mindx, adata.begin());
-}
-
-void
-asuput(
-  arr_cref<int> ihkl,
-  arr_ref<int> jhkl,
-  int& isym)
-{
-  asuput_(ihkl.begin(), jhkl.begin(), &isym);
 }
 
 void
@@ -195,47 +46,6 @@ lrinfo(
 {
   lrinfo_(&mindx, versnx.elems(), &ncolx, &nreflx, ranges.begin(),
     versnx.len());
-}
-
-void
-qnan(
-  float& value)
-{
-  qnan_(&value);
-}
-
-void
-parser(
-  str_ref key,
-  str_ref line,
-  arr_ref<int> ibeg,
-  arr_ref<int> iend,
-  arr_ref<int> ityp,
-  arr_ref<float> fvalue,
-  str_arr_ref<> cvalue,
-  arr_ref<int> idec,
-  int& ntok,
-  bool& lend,
-  bool const& print)
-{
-  ccp4_ftn_logical lend_ = lend;
-  ccp4_ftn_logical print_ = print;
-  parser_(
-    key.elems(),
-    line.elems(),
-    ibeg.begin(),
-    iend.begin(),
-    ityp.begin(),
-    fvalue.begin(),
-    cvalue.begin(),
-    idec.begin(),
-    &ntok,
-    &lend_,
-    &print_,
-    key.len(),
-    line.len(),
-    cvalue.len());
-  lend = static_cast<bool>(lend_);
 }
 
 void
@@ -371,15 +181,6 @@ lrrefl(
 }
 
 void
-asuget(
-  arr_cref<int> ihkl,
-  arr_ref<int> jhkl,
-  int const& isym)
-{
-  asuget_(ihkl.begin(), jhkl.begin(), &isym);
-}
-
-void
 lwclos(
   int const& mindx,
   int const& iprint)
@@ -497,44 +298,4 @@ lwtitl(
   lwtitl_(&mindx, ntitle.elems(), &flag, ntitle.len());
 }
 
-void
-centric(
-  int const& nsm,
-  arr_cref<float, 3> rsm,
-  int const& iprint)
-{
-  centric_(&nsm, rsm.begin(), &iprint);
-}
-
-void
-centr(
-  arr_cref<int> hkl,
-  int& ic)
-{
-  centr_(hkl.begin(), &ic);
-}
-
-void
-setrsl(
-  float const& a,
-  float const& b,
-  float const& c,
-  float const& alpha,
-  float const& beta,
-  float const& gamma)
-{
-  setrsl_(&a, &b, &c, &alpha, &beta, &gamma);
-}
-
-float
-sthlsq(
-  int const& ih,
-  int const& ik,
-  int const& il)
-{
-  float reso;
-  sthlsq1_(&reso, &ih, &ik, &il);
-  return reso;
-}
-
-} // namespace ccp4_calls_fem
+} // namespace ccp4_mtzlib_fem
