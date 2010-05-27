@@ -1,7 +1,29 @@
 #include <fem.hpp> // Fortran EMulation library of fable module
 
 #include "ccp4_parser_fem.hpp"
-#include "ccp4_calls_extern_c.hpp"
+
+extern "C" {
+
+typedef unsigned int ccp4_ftn_logical;
+
+void
+parser_(
+  char* key,
+  char* line,
+  int* ibeg,
+  int* iend,
+  int* ityp,
+  float* fvalue,
+  /*str_arr_ref<>*/ char* cvalue,
+  int* idec,
+  int* ntok,
+  ccp4_ftn_logical* lend,
+  ccp4_ftn_logical const* print,
+  int key_len,
+  int line_len,
+  int cvalue_len);
+
+} // extern "C"
 
 namespace ccp4_parser_fem {
 

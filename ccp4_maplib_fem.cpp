@@ -1,7 +1,50 @@
 #include <fem.hpp> // Fortran EMulation library of fable module
 
 #include "ccp4_maplib_fem.hpp"
-#include "ccp4_calls_extern_c.hpp"
+
+extern "C" {
+
+void
+mwrhdl_(
+  int const* iunit,
+  char const* mapnam,
+  char const* title,
+  int const* nsec,
+  int const* iuvw,
+  int const* mxyz,
+  int const* nw1,
+  int const* nu1,
+  int const* nu2,
+  int const* nv1,
+  int const* nv2,
+  float const* cell,
+  int const* lspgrp,
+  int* lmode,
+  int mapnam_len,
+  int title_len);
+
+void
+mwrsec_(
+  int const* iunit,
+  /*arr_cref<float, 2>*/ float const* x,
+  int const* mu,
+  int const* mv,
+  int const* iu1,
+  int const* iu2,
+  int const* iv1,
+  int const* iv2);
+
+void
+mwclose_(
+  int const* iunit);
+
+void
+msywrt_(
+  int const* iunit,
+  int const* nsym,
+  /*arr_cref<float, 3>*/ float const* rot);
+
+} // extern "C"
 
 namespace ccp4_maplib_fem {
 

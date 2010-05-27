@@ -1,7 +1,92 @@
 #include <fem.hpp> // Fortran EMulation library of fable module
 
 #include "ccp4_symlib_fem.hpp"
-#include "ccp4_calls_extern_c.hpp"
+
+extern "C" {
+
+typedef unsigned int ccp4_ftn_logical;
+
+void
+symfr2_(
+  const char* icol,
+  int const* i1,
+  int* ns,
+  float* rot, // [][4][4]
+  int icol_len);
+
+void
+msymlb_(
+  int const* ist,
+  int* lspgrp,
+  char* namspg,
+  char* nampg,
+  int* nsymp,
+  int* nsym,
+  float* rot, // [][4][4]
+  int namspg_len,
+  int nampg_len);
+
+void
+symtr3_(
+  int const* nsm,
+  /*arr_cref<float, 3>*/ float const* rsm,
+  /*str_arr_ref<>*/ char* symchs,
+  int const* iprint,
+  int symchs_len);
+
+void
+asuset_(
+  const char* spgnam,
+  int const* numsgp,
+  char* pgname,
+  int const* msym,
+  float* rrsym, // [][4][4]
+  int* msymp,
+  int* mlaue,
+  ccp4_ftn_logical const* lprint,
+  int spgnam_len,
+  int pgname_len);
+
+void
+asuput_(
+  int const* ihkl,
+  int* jhkl,
+  int* isym);
+
+void
+asuget_(
+  int const* ihkl,
+  int* jhkl,
+  int const* isym);
+
+void
+centric_(
+  int const* nsm,
+  /*arr_cref<float, 3>*/ float const* rsm,
+  int const* iprint);
+
+void
+centr_(
+  int const* hkl,
+  int* ic);
+
+void
+setrsl_(
+  float const* a,
+  float const* b,
+  float const* c,
+  float const* alpha,
+  float const* beta,
+  float const* gamma);
+
+void
+sthlsq1_(
+  float* reso,
+  int const* ih,
+  int const* ik,
+  int const* il);
+
+} // extern "C"
 
 namespace ccp4_symlib_fem {
 
