@@ -30,7 +30,6 @@ lib/src/ccp4_unitcell.h
 lib/src/ccp4_unitcell_f.c
 lib/src/ccp4_utils.h
 lib/src/ccp4_vars.h
-lib/src/ccplib.f
 lib/src/cmap_accessor.c
 lib/src/cmap_close.c
 lib/src/cmap_data.c
@@ -58,21 +57,16 @@ lib/src/csymlib_f.c
 lib/src/cvecmat.c
 lib/src/cvecmat.h
 lib/src/fftlib.f
-lib/src/keyparse.f
-lib/src/libhtml.f
 lib/src/library_err.c
 lib/src/library_f.c
 lib/src/library_f.h
 lib/src/library_file.c
 lib/src/library_file.h
 lib/src/library_utils.c
-lib/src/modlib.f
 lib/src/mtzdata.h
 lib/src/overview.h
 lib/src/pack_c.c
 lib/src/pack_c.h
-lib/src/parser.f
-lib/src/unix.m4
 """.splitlines()
   for path in relative_paths:
     print path
