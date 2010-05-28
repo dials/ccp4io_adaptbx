@@ -1,7 +1,5 @@
 #include <fem.hpp> // Fortran EMulation library of fable module
 
-#include "ccp4_parser_fem.hpp"
-
 extern "C" {
 
 typedef unsigned int ccp4_ftn_logical;
@@ -29,6 +27,7 @@ namespace ccp4_parser_fem {
 
 using namespace fem::major_types;
 
+inline
 void
 lerror(
   int const& errflg,
@@ -38,6 +37,7 @@ lerror(
   throw BOOST_ADAPTBX_NOT_IMPLEMENTED();
 }
 
+inline
 void
 parser(
   str_ref key,

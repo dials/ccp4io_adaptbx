@@ -1,7 +1,5 @@
 #include <fem.hpp> // Fortran EMulation library of fable module
 
-#include "ccp4_symlib_fem.hpp"
-
 extern "C" {
 
 typedef unsigned int ccp4_ftn_logical;
@@ -92,6 +90,7 @@ namespace ccp4_symlib_fem {
 
 using namespace fem::major_types;
 
+inline
 void
 symfr2(
   str_cref icol,
@@ -107,6 +106,7 @@ symfr2(
     icol.len());
 }
 
+inline
 void
 msymlb(
   int const& ist,
@@ -122,6 +122,7 @@ msymlb(
     namspg.len(), nampg.len());
 }
 
+inline
 void
 symtr3(
   int const& nsm,
@@ -132,6 +133,7 @@ symtr3(
   symtr3_(&nsm, rsm.begin(), symchs.begin(), &iprint, symchs.len());
 }
 
+inline
 void
 asuset(
   str_cref spgnam,
@@ -157,6 +159,7 @@ asuset(
     pgname.len());
 }
 
+inline
 void
 asuput(
   arr_cref<int> ihkl,
@@ -166,6 +169,7 @@ asuput(
   asuput_(ihkl.begin(), jhkl.begin(), &isym);
 }
 
+inline
 void
 asuget(
   arr_cref<int> ihkl,
@@ -175,6 +179,7 @@ asuget(
   asuget_(ihkl.begin(), jhkl.begin(), &isym);
 }
 
+inline
 void
 centric(
   int const& nsm,
@@ -184,6 +189,7 @@ centric(
   centric_(&nsm, rsm.begin(), &iprint);
 }
 
+inline
 void
 centr(
   arr_cref<int> hkl,
@@ -192,6 +198,7 @@ centr(
   centr_(hkl.begin(), &ic);
 }
 
+inline
 void
 setrsl(
   float const& a,
@@ -204,6 +211,7 @@ setrsl(
   setrsl_(&a, &b, &c, &alpha, &beta, &gamma);
 }
 
+inline
 float
 sthlsq(
   int const& ih,

@@ -1,7 +1,5 @@
 #include <fem.hpp> // Fortran EMulation library of fable module
 
-#include "ccp4_maplib_fem.hpp"
-
 extern "C" {
 
 void
@@ -50,6 +48,7 @@ namespace ccp4_maplib_fem {
 
 using namespace fem::major_types;
 
+inline
 void
 mwrhdl(
   int const& iunit,
@@ -86,6 +85,7 @@ mwrhdl(
     title.len());
 }
 
+inline
 void
 mwrsec(
   int const& iunit,
@@ -100,6 +100,7 @@ mwrsec(
   mwrsec_(&iunit, x.begin(), &mu, &mv, &iu1, &iu2, &iv1, &iv2);
 }
 
+inline
 void
 mwclose(
   int const& iunit)
@@ -107,6 +108,7 @@ mwclose(
   mwclose_(&iunit);
 }
 
+inline
 void
 msywrt(
   int const& iunit,

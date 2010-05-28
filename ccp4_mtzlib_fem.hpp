@@ -1,7 +1,5 @@
 #include <fem.hpp> // Fortran EMulation library of fable module
 
-#include "ccp4_mtzlib_fem.hpp"
-
 extern "C" {
 
 typedef unsigned int ccp4_ftn_logical;
@@ -193,6 +191,7 @@ namespace ccp4_mtzlib_fem {
 
 using namespace fem::major_types;
 
+inline
 void
 lwrefl(
   int const& mindx,
@@ -201,12 +200,14 @@ lwrefl(
   lwrefl_(&mindx, adata.begin());
 }
 
+inline
 void
 mtzini()
 {
   mtzini_();
 }
 
+inline
 void
 lrcell(
   int const& mindx,
@@ -215,6 +216,7 @@ lrcell(
   lrcell_(&mindx, cellp.begin());
 }
 
+inline
 void
 lrclos(
   int const& mindx)
@@ -222,6 +224,7 @@ lrclos(
   lrclos_(&mindx);
 }
 
+inline
 void
 lrinfo(
   int const& mindx,
@@ -234,6 +237,7 @@ lrinfo(
     versnx.len());
 }
 
+inline
 void
 lropen(
   int const& mindx,
@@ -244,6 +248,7 @@ lropen(
   lropen_(&mindx, filnam.elems(), &iprint, &ifail, filnam.len());
 }
 
+inline
 void
 lrsymi(
   int const& mindx,
@@ -258,6 +263,7 @@ lrsymi(
     ltypex.len(), spgrnx.len(), pgnamx.len());
 }
 
+inline
 void
 lrsymm(
   int const& mindx,
@@ -267,6 +273,7 @@ lrsymm(
   lrsymm_(&mindx, &nsymx, rsymx.begin());
 }
 
+inline
 void
 lridx(
   int const& mindx,
@@ -292,6 +299,7 @@ lridx(
     dname.len());
 }
 
+inline
 void
 lrassn(
   int const& mindx,
@@ -305,6 +313,7 @@ lrassn(
     lsprgi.len(), ctprgi.len());
 }
 
+inline
 void
 lkyin(
   int const& mindx,
@@ -327,6 +336,7 @@ lkyin(
     line.len());
 }
 
+inline
 void
 lrclid(
   int const& mindx,
@@ -336,6 +346,7 @@ lrclid(
   lrclid_(&mindx, csetid.begin(), &ncol);
 }
 
+inline
 void
 lrrefm(
   int const& mindx,
@@ -354,6 +365,7 @@ lrrefm(
   }
 }
 
+inline
 void
 lrrefl(
   int const& mindx,
@@ -366,6 +378,7 @@ lrrefl(
   eof = static_cast<bool>(eof_);
 }
 
+inline
 void
 lwclos(
   int const& mindx,
@@ -374,6 +387,7 @@ lwclos(
   lwclos_(&mindx, &iprint);
 }
 
+inline
 void
 lwcell(
   int const& mindx,
@@ -382,6 +396,7 @@ lwcell(
   lwcell_(&mindx, cellp.begin());
 }
 
+inline
 void
 lwclab(
   int const& mindx,
@@ -395,6 +410,7 @@ lwclab(
     lsprgo.len(), ctprgo.len());
 }
 
+inline
 void
 lwhstl(
   int const& mindx,
@@ -403,6 +419,7 @@ lwhstl(
   lwhstl_(&mindx, extra.elems(), extra.len());
 }
 
+inline
 void
 lwopen(
   int const& mindx,
@@ -411,6 +428,7 @@ lwopen(
   lwopen_(&mindx, filnam.elems(), filnam.len());
 }
 
+inline
 void
 lwsymm(
   int const& mindx,
@@ -436,6 +454,7 @@ lwsymm(
     pgnamx.len());
 }
 
+inline
 void
 lwidas(
   int const& mindx,
@@ -454,6 +473,7 @@ lwidas(
     dname.len());
 }
 
+inline
 void
 lwidx(
   int const& mindx,
@@ -475,6 +495,7 @@ lwidx(
     dataset_name.len());
 }
 
+inline
 void
 lwtitl(
   int const& mindx,

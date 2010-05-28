@@ -1,7 +1,5 @@
 #include <fem.hpp> // Fortran EMulation library of fable module
 
-#include "ccp4_library_fem.hpp"
-
 extern "C" {
 
 void
@@ -14,6 +12,7 @@ namespace ccp4_library_fem {
 
 using namespace fem::major_types;
 
+inline
 void
 qnan(
   float& value)
