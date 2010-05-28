@@ -46,8 +46,6 @@ env_etc.include_registry.append(
     env=env,
     paths=["#", env_etc.ccp4io_include])
 env.Append(LIBS=env_etc.libm)
-if (env_etc.static_libraries): builder = env.StaticLibrary
-else:                          builder = env.SharedLibrary
 if (   op.normcase(op.dirname(env_etc.ccp4io_dist))
     != op.normcase("ccp4io")):
   env.Repository(op.dirname(env_etc.ccp4io_dist))
@@ -119,5 +117,6 @@ library_f.c
     source.append(op.join("#ccp4io_adaptbx", file_name))
   source.append(op.join("#ccp4io_adaptbx", "printf_wrappers.c"))
 
-builder(target='#lib/ccp4io', source=source)
+# static library for solve_resolve
+env.StaticLibrary(target='#lib/ccp4io', source=source)
 env_etc.ccp4io_lib = "ccp4io"
