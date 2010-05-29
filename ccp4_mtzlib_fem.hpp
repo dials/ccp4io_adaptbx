@@ -152,9 +152,9 @@ lwsymm_(
   int const* nspgrx,
   char const* spgrnx,
   char const* pgnamx,
-  int ltypex,
-  int spgrnx,
-  int pgnamx);
+  int ltypex_len,
+  int spgrnx_len,
+  int pgnamx_len);
 
 void
 lwidas_(
