@@ -1,3 +1,6 @@
+#ifndef CCP4IO_ADAPTBX_CCP4_LIBRARY_FEM_HPP
+#define CCP4IO_ADAPTBX_CCP4_LIBRARY_FEM_HPP
+
 #include <fem.hpp> // Fortran EMulation library of fable module
 
 extern "C" {
@@ -21,3 +24,5 @@ qnan(
 }
 
 } // namespace ccp4_library_fem
+
+#endif // GUARD

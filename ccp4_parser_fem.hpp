@@ -1,3 +1,6 @@
+#ifndef CCP4IO_ADAPTBX_CCP4_PARSER_FEM_HPP
+#define CCP4IO_ADAPTBX_CCP4_PARSER_FEM_HPP
+
 #include <fem.hpp> // Fortran EMulation library of fable module
 
 extern "C" {
@@ -73,3 +76,5 @@ parser(
 }
 
 } // namespace ccp4_parser_fem
+
+#endif // GUARD

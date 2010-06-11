@@ -1,3 +1,6 @@
+#ifndef CCP4IO_ADAPTBX_CCP4_MTZLIB_FEM_HPP
+#define CCP4IO_ADAPTBX_CCP4_MTZLIB_FEM_HPP
+
 #include <fem.hpp> // Fortran EMulation library of fable module
 
 extern "C" {
@@ -506,3 +509,5 @@ lwtitl(
 }
 
 } // namespace ccp4_mtzlib_fem
+
+#endif // GUARD

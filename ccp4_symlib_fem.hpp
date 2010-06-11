@@ -1,3 +1,6 @@
+#ifndef CCP4IO_ADAPTBX_CCP4_SYMLIB_FEM_HPP
+#define CCP4IO_ADAPTBX_CCP4_SYMLIB_FEM_HPP
+
 #include <fem.hpp> // Fortran EMulation library of fable module
 
 extern "C" {
@@ -224,3 +227,5 @@ sthlsq(
 }
 
 } // namespace ccp4_symlib_fem
+
+#endif // GUARD

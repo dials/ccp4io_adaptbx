@@ -1,3 +1,6 @@
+#ifndef CCP4IO_ADAPTBX_CCP4_MAPLIB_FEM_HPP
+#define CCP4IO_ADAPTBX_CCP4_MAPLIB_FEM_HPP
+
 #include <fem.hpp> // Fortran EMulation library of fable module
 
 extern "C" {
@@ -119,3 +122,5 @@ msywrt(
 }
 
 } // namespace ccp4_maplib_fem
+
+#endif // GUARD

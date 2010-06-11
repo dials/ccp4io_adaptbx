@@ -1,3 +1,6 @@
+#ifndef CCP4IO_ADAPTBX_CCP4_FFTLIB_FEM_HPP
+#define CCP4IO_ADAPTBX_CCP4_FFTLIB_FEM_HPP
+
 #include <fem.hpp> // Fortran EMulation library of fable module
 
 namespace ccp4_fftlib_fem {
@@ -139,3 +142,5 @@ realft(
   arr_cref<int> dim);
 
 } // namespace ccp4_fftlib_fem
+
+#endif // GUARD
