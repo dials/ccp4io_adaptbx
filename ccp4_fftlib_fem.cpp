@@ -59,12 +59,12 @@ srfp(
       n = n / f;
       if (n == (n / f) * f) {
         n = n / f;
-        p = p + 1;
+        p++;
         pp(p) = f;
         psym = psym * f;
       }
       else {
-        q = q + 1;
+        q++;
         qq(q) = f;
       }
       goto statement_10;
@@ -111,7 +111,7 @@ srfp(
   ptwo = 1;
   j = 0;
   statement_90:
-  j = j + 1;
+  j++;
   if (factor(j) != 0) {
     if (factor(j) == 2) {
       ptwo = ptwo * 2;
@@ -1024,7 +1024,7 @@ rpcftk(
   fp = fem::real(p);
   fu = 0.0f;
   FEM_DO(u, 1, pp) {
-    fu = fu + 1.0f;
+    fu += 1.0f;
     angle = ccp4_fftlib_twopi * fu / fp;
     jj = p - u;
     a(u) = fem::cos(angle);
@@ -1069,21 +1069,21 @@ rpcftk(
             rb(u) = bb(u, 1) * ru;
             ib(u) = bb(u, 1) * iu;
           }
-          xt = xt + rs;
-          yt = yt + is;
+          xt += rs;
+          yt += is;
           FEM_DO(u, 2, pp) {
             jj = p - u;
             rs = x(k, u + 1) + x(k, jj + 1);
             is = y(k, u + 1) + y(k, jj + 1);
             ru = x(k, u + 1) - x(k, jj + 1);
             iu = y(k, u + 1) - y(k, jj + 1);
-            xt = xt + rs;
-            yt = yt + is;
+            xt += rs;
+            yt += is;
             FEM_DO(v, 1, pp) {
-              ra(v) = aa(v, u) * rs + ra(v);
-              ia(v) = aa(v, u) * is + ia(v);
-              rb(v) = bb(v, u) * ru + rb(v);
-              ib(v) = bb(v, u) * iu + ib(v);
+              ra(v) += aa(v, u) * rs;
+              ia(v) += aa(v, u) * is;
+              rb(v) += bb(v, u) * ru;
+              ib(v) += bb(v, u) * iu;
             }
           }
           x(k, 1) = xt;
@@ -1144,7 +1144,7 @@ mdftkd(
   f = 0;
   m = n;
   statement_10:
-  f = f + 1;
+  f++;
   p = factor(f);
   if (p == 0) {
     return;
@@ -1309,7 +1309,7 @@ diprp(
                           FEM_DOSTEP(l, k, ll, ls) {
                             FEM_DOSTEP(m, l, ml, ms) {
                               FEM_DOSTEP(n, m, nl, ns) {
-                                jj = jj + 1;
+                                jj++;
                                 if (jj < n) {
                                   delta = (n - jj) * sep;
                                   p1 = (jj - 1) * sep + 1;
@@ -1579,7 +1579,7 @@ realft(
         l = k + j;
         even(l) = even(k) - odd(k);
         odd(l) = 0.0f;
-        even(k) = even(k) + odd(k);
+        even(k) += odd(k);
         odd(k) = 0.0f;
       }
     }
