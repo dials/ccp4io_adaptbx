@@ -110,7 +110,7 @@ void
 lrrefl_(
   int const* mindx,
   float* resol,
-  float const* adata,
+  float* adata,
   ccp4_ftn_logical* eof);
 
 void
@@ -373,7 +373,7 @@ void
 lrrefl(
   int const& mindx,
   float& resol,
-  arr_cref<float> adata,
+  arr_ref<float> adata,
   bool& eof)
 {
   ccp4_ftn_logical eof_ = eof;
