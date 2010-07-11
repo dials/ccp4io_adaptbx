@@ -28,12 +28,12 @@ def replace_printf(file_name):
   for line in open(file_name).read().splitlines():
     for key in ["printf", "fprintf"]:
       matches = list(re.finditer(
-        pattern="[^A-Za-z0-9_]printf[^A-Za-z0-9_]", string=line))
+        pattern="[^A-Za-z0-9_]%s[^A-Za-z0-9_]" % key, string=line))
       if (len(matches) != 0):
         for m in reversed(matches):
           s,e = m.start(), m.end()
           line = line[:s] \
-               + line[s:e].replace("printf", "ccp4io_printf") \
+               + line[s:e].replace(key, "ccp4io_%s" % key) \
                + line[e:]
     result.append(line)
   return "\n".join(result)
