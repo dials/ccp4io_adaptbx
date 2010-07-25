@@ -37,7 +37,7 @@ lerror(
   int const& ifail,
   str_cref errmsg)
 {
-  throw BOOST_ADAPTBX_NOT_IMPLEMENTED();
+  throw TBXX_NOT_IMPLEMENTED();
 }
 
 inline
