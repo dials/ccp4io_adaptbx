@@ -12,7 +12,7 @@ void
 qopen(
   int const& iunit,
   str_cref lognam,
-  str_ref atbuta)
+  str_cref atbuta)
 {
   throw TBXX_NOT_IMPLEMENTED();
 }
