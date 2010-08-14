@@ -75,6 +75,15 @@ parser(
   lend = static_cast<bool>(lend_);
 }
 
+inline
+void
+putlin(
+  str_cref strout,
+  str_cref outwin)
+{
+  throw TBXX_NOT_IMPLEMENTED();
+}
+
 } // namespace ccp4_parser_fem
 
 #endif // GUARD

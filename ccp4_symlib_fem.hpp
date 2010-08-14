@@ -127,6 +127,21 @@ msymlb(
 
 inline
 void
+msymlb3(
+  int const& ist,
+  int& lspgrp,
+  str_ref namspg_cif,
+  str_ref namspg_cifs,
+  str_ref nampg,
+  int& nsymp,
+  int& nsym,
+  arr_ref<float, 3> rlsymmmatrx)
+{
+  throw TBXX_NOT_IMPLEMENTED();
+}
+
+inline
+void
 symtr3(
   int const& nsm,
   arr_cref<float, 3> rsm,

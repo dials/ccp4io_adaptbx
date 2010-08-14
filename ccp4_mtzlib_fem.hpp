@@ -304,6 +304,17 @@ lridx(
 
 inline
 void
+lwbsetidx(
+  int const& /* mtzout */,
+  int const& /* iserop */,
+  str_cref /* crystalname */,
+  str_cref /* datasetname */)
+{
+  throw TBXX_NOT_IMPLEMENTED();
+}
+
+inline
+void
 lrassn(
   int const& mindx,
   str_arr_cref<> lsprgi,
@@ -420,6 +431,16 @@ lwhstl(
   str_cref extra)
 {
   lwhstl_(&mindx, extra.elems(), extra.len());
+}
+
+inline
+void
+lwhist(
+  int const& mindx,
+  str_arr_cref<> hstrng,
+  int const& nlines)
+{
+  throw TBXX_NOT_IMPLEMENTED();
 }
 
 inline

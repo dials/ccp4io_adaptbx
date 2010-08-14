@@ -17,6 +17,22 @@ using namespace fem::major_types;
 
 inline
 void
+ccpupc(
+  str_ref string)
+{
+  throw TBXX_NOT_IMPLEMENTED();
+}
+
+inline
+int
+lenstr(
+  str_cref string)
+{
+  throw TBXX_NOT_IMPLEMENTED();
+}
+
+inline
+void
 qnan(
   float& value)
 {
