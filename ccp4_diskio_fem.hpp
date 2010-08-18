@@ -21,6 +21,36 @@ inline
 void
 qwrite(
   int const& /* iunit */,
+  arr_cref<int> /* buffer */,
+  int const& /* nitems */)
+{
+  throw TBXX_NOT_IMPLEMENTED();
+}
+
+inline
+void
+qwrite(
+  int const& /* iunit */,
+  fem::integer_star_2 const& /* buffer */,
+  int const& /* nitems */)
+{
+  throw TBXX_NOT_IMPLEMENTED();
+}
+
+inline
+void
+qwrite(
+  int const& /* iunit */,
+  arr_ref<fem::integer_star_2> /* buffer */,
+  int const& /* nitems */)
+{
+  throw TBXX_NOT_IMPLEMENTED();
+}
+
+inline
+void
+qwrite(
+  int const& /* iunit */,
   arr_cref<fem::integer_star_8> /* buffer */,
   int const& /* nitems */)
 {
@@ -57,9 +87,52 @@ qseek(
 
 inline
 void
+qmode(
+  int const& /* iunit */,
+  int const& /* mode */,
+  int& size)
+{
+  throw TBXX_NOT_IMPLEMENTED();
+}
+
+inline
+void
 qread(
   int const& /* iunit */,
   arr_ref<float> buffer,
+  int const& /* nitems */,
+  int& result)
+{
+  throw TBXX_NOT_IMPLEMENTED();
+}
+
+inline
+void
+qread(
+  int const& /* iunit */,
+  arr_ref<fem::integer_star_1> buffer,
+  int const& /* nitems */,
+  int& result)
+{
+  throw TBXX_NOT_IMPLEMENTED();
+}
+
+inline
+void
+qread(
+  int const& /* iunit */,
+  arr_ref<fem::integer_star_2> buffer,
+  int const& /* nitems */,
+  int& result)
+{
+  throw TBXX_NOT_IMPLEMENTED();
+}
+
+inline
+void
+qread(
+  int const& /* iunit */,
+  arr_ref<int> buffer,
   int const& /* nitems */,
   int& result)
 {
