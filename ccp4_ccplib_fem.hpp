@@ -48,6 +48,19 @@ ccpdpn(
 
 inline
 void
+ccpdpn(
+  int const& iun,
+  str_cref lognam,
+  str_cref status,
+  str_cref type,
+  int const& lrec,
+  int& ifail)
+{
+  throw TBXX_NOT_IMPLEMENTED();
+}
+
+inline
+void
 ccpdat(
   str_ref caldat)
 {
