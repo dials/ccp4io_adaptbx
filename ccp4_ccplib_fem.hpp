@@ -86,6 +86,14 @@ litend(
 
 inline
 bool
+litend()
+{
+  bool return_value = fem::bool0;
+  throw TBXX_NOT_IMPLEMENTED();
+}
+
+inline
+bool
 ccponl(
   int const& /* idum */)
 {
