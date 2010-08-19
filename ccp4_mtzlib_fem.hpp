@@ -304,6 +304,17 @@ lridx(
 
 inline
 void
+lwbat(
+  int const& /* mtzout */,
+  int const& /* iserop */,
+  arr_cref<float> /* rbatch */,
+  str_arr_cref<> /* cbatch */)
+{
+  throw TBXX_NOT_IMPLEMENTED();
+}
+
+inline
+void
 lwbsetidx(
   int const& /* mtzout */,
   int const& /* iserop */,

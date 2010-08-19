@@ -218,6 +218,16 @@ centr(
 
 inline
 void
+epslon(
+  arr_cref<int> ih,
+  float& epsi,
+  int& isysab)
+{
+  throw TBXX_NOT_IMPLEMENTED();
+}
+
+inline
+void
 setrsl(
   float const& a,
   float const& b,
