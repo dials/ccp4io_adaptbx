@@ -218,10 +218,30 @@ centr(
 
 inline
 void
+epsln(
+  int const& nsm,
+  int const& nsmp,
+  arr_cref<float, 3> rsm,
+  int const& iprint)
+{
+  throw TBXX_NOT_IMPLEMENTED();
+}
+
+inline
+void
 epslon(
   arr_cref<int> ih,
   float& epsi,
   int& isysab)
+{
+  throw TBXX_NOT_IMPLEMENTED();
+}
+
+inline
+bool
+hkleq(
+  arr_cref<int> ih,
+  arr_cref<int> kh)
 {
   throw TBXX_NOT_IMPLEMENTED();
 }
