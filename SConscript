@@ -83,7 +83,9 @@ if (env_etc.ccp4io_has_cmaplib):
     "cmap_symop.c",
 ])
 
-need_f_c = libtbx.env.has_module("solve_resolve")
+need_f_c = (
+     libtbx.env.has_module("solve_resolve")
+  or libtbx.env.find_in_repositories(relative_path="mosflm_fable"))
 if (need_f_c):
   for probe_file_name in [
         "lib/src/ccp4_fortran.h"]:
