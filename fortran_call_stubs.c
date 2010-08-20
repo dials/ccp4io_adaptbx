@@ -13,7 +13,7 @@ FORTRAN_FUN ( int, IARGC, iargc,
               (),
               ())
 {
-  bail("FORTRAN iargc");
+  /*bail("FORTRAN iargc");*/
   return 0;
 }
 
@@ -21,13 +21,16 @@ FORTRAN_SUBR ( GETARG, getarg,
                (int *i, char *arg, int arg_len),
                (int *i, char *arg, int arg_len),
                (int *i, char *arg, int arg_len))
-{ bail("FORTRAN getarg"); }
+{ /*bail("FORTRAN getarg");*/
+  *arg = "\0";
+}
 
 FORTRAN_SUBR ( CCP4H_INIT, ccp4h_init,
                (),
                (),
                ())
-{ bail("ccp4h_init"); }
+{ /*bail("ccp4h_init");*/
+  /*access environment variables and construct output*/}
 
 FORTRAN_SUBR ( CCP4H_INIT_LIB, ccp4h_init_lib,
                (int* ihtml, int* isumm),
