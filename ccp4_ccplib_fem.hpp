@@ -3,6 +3,18 @@
 
 #include <fem.hpp> // Fortran EMulation library of fable module
 
+extern "C" {
+
+void
+ccp4_version_(
+  char* version,
+  int version_len);
+
+void
+ccpfyp_();
+
+}
+
 namespace ccp4_ccplib_fem {
 
 using namespace fem::major_types;
@@ -116,14 +128,14 @@ void
 ccp4_version(
   str_ref version)
 {
-  throw TBXX_NOT_IMPLEMENTED();
+  ccp4_version_(version.elems(),version.len());
 }
 
 inline
 void
 ccpfyp()
 {
-  throw TBXX_NOT_IMPLEMENTED();
+  ccpfyp_();
 }
 
 } // namespace ccp4_ccplib_fem
