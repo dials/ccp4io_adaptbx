@@ -11,8 +11,38 @@ inline
 bool
 vaxvms()
 {
-  bool return_value = fem::bool0;
+  return false;
+}
+
+inline
+void
+ugerr(
+  int const& /*status*/,
+  str_ref errstr)
+{
   throw TBXX_NOT_IMPLEMENTED();
+}
+
+inline
+void
+ccp4h_summary_beg()
+{
+}
+
+inline
+void
+ccp4h_summary_end()
+{
+}
+
+inline
+void
+ubytes(
+  int& inum,
+  str_ref string)
+{
+  inum = 4;
+  string = "BYTES";
 }
 
 inline

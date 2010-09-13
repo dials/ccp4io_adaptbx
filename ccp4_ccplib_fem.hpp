@@ -32,8 +32,7 @@ int
 lenstr(
   str_cref string)
 {
-  int return_value = fem::int0;
-  throw TBXX_NOT_IMPLEMENTED();
+  return fem::len_trim(string);
 }
 
 inline
@@ -147,6 +146,14 @@ void
 ccpfyp()
 {
   ccpfyp_();
+}
+
+inline
+int
+lunsto(
+  int const& /*idum*/)
+{
+  return 6;
 }
 
 } // namespace ccp4_ccplib_fem
