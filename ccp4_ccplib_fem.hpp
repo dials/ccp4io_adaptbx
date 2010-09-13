@@ -109,8 +109,7 @@ bool
 ccponl(
   int const& /* idum */)
 {
-  bool return_value = fem::bool0;
-  throw TBXX_NOT_IMPLEMENTED();
+  return false;
 }
 
 inline
@@ -119,8 +118,20 @@ ccpe2i(
   str_cref name,
   int const& defval)
 {
-  int return_value = fem::int0;
-  throw TBXX_NOT_IMPLEMENTED();
+  std::string k = fem::utils::strip_leading_and_trailing_blank_padding(name);
+  char* v = std::getenv(k.c_str());
+  if (v == 0) return defval;
+  int result;
+  int n = std::sscanf(v, "%d", result);
+  if (n != 1) {
+    std::ostringstream o;
+    o << "Environment variable \""
+      << std::string(k)
+      << "\" is not an integer: \""
+      << v << "\"";
+    throw std::runtime_error(o.str());
+  }
+  return result;
 }
 
 inline

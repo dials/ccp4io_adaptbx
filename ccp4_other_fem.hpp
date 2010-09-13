@@ -18,10 +18,10 @@ vaxvms()
 inline
 void
 ugtenv(
-  str_cref /* namenv */,
+  str_cref namenv,
   str_ref valenv)
 {
-  throw TBXX_NOT_IMPLEMENTED();
+  fem::getenv(namenv, valenv);
 }
 
 inline
