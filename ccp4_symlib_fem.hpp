@@ -28,6 +28,20 @@ msymlb_(
   int nampg_len);
 
 void
+msymlb3_(
+  int const* ist,
+  int* lspgrp,
+  char* namspg_cif,
+  char* namspg_cifs,
+  char* nampg,
+  int* nsymp,
+  int* nsym,
+  float* rlsymmmatrx,
+  int namspg_cif_len,
+  int namspg_cifs_len,
+  int nampg_len);
+
+void
 symtr3_(
   int const* nsm,
   /*arr_cref<float, 3>*/ float const* rsm,
@@ -137,7 +151,10 @@ msymlb3(
   int& nsym,
   arr_ref<float, 3> rlsymmmatrx)
 {
-  throw TBXX_NOT_IMPLEMENTED();
+  msymlb3_(
+    &ist, &lspgrp, namspg_cif.elems(), namspg_cifs.elems(), nampg.elems(),
+    &nsymp, &nsym, rlsymmmatrx.begin(),
+    namspg_cif.len(), namspg_cifs.len(), nampg.len());
 }
 
 inline
