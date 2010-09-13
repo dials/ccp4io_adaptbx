@@ -24,7 +24,11 @@ void
 ccpupc(
   str_ref string)
 {
-  throw TBXX_NOT_IMPLEMENTED();
+  int n = string.len();
+  char* s = string.elems();
+  for(int i=0;i<n;i++) {
+    s[i] = fem::utils::to_upper(s[i]);
+  }
 }
 
 inline

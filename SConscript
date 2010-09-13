@@ -42,6 +42,8 @@ env = env_base.Clone(
   SHLINKFLAGS=env_etc.shlinkflags)
 env.Append(CCFLAGS=env_etc.ccp4io_defines)
 env.Append(SHCCFLAGS=env_etc.ccp4io_defines)
+if (libtbx.env.has_module("mosflm_fable")):
+  env_etc.patch_scons_env_for_ad_hoc_debug(env=env)
 env_etc.include_registry.append(
     env=env,
     paths=["#", env_etc.ccp4io_include])
