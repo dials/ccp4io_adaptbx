@@ -5,6 +5,39 @@
 
 namespace ccp4_diskio_fem {
 
+extern "C" {
+
+void qopen_(
+  int const* iunit,
+  char const* lognam,
+  char const* atbuta,
+  int lognam_len,
+  int atbuta_len);
+
+void qmode_(
+  int const* iunit,
+  int const* mode,
+  int* size);
+
+void qqinq_(
+  int const* iunit,
+  char const* lfn,
+  char* filnam,
+  int const* length,
+  int lfn_len,
+  int filnam_len);
+
+void qread_(
+  int const* iunit,
+  unsigned long* buffer,
+  int const* nitems,
+  int* result);
+
+void qclose_(
+  int const* iunit);
+
+}
+
 using namespace fem::major_types;
 
 inline
@@ -14,7 +47,7 @@ qopen(
   str_cref lognam,
   str_cref atbuta)
 {
-  throw TBXX_NOT_IMPLEMENTED();
+  qopen_(&iunit, lognam.elems(), atbuta.elems(), lognam.len(), atbuta.len());
 }
 
 inline
@@ -69,9 +102,9 @@ qisnan(
 inline
 void
 qclose(
-  int const& /* iunit */)
+  int const& iunit)
 {
-  throw TBXX_NOT_IMPLEMENTED();
+  qclose_(&iunit);
 }
 
 inline
@@ -88,11 +121,12 @@ qseek(
 inline
 void
 qmode(
-  int const& /* iunit */,
-  int const& /* mode */,
+  int const& iunit,
+  int const& mode,
   int& size)
 {
-  throw TBXX_NOT_IMPLEMENTED();
+  qmode_(&iunit, &mode, &size);
+  TBXX_EXAMINE(size);
 }
 
 inline
@@ -109,12 +143,13 @@ qread(
 inline
 void
 qread(
-  int const& /* iunit */,
+  int const& iunit,
   arr_ref<fem::integer_star_1> buffer,
-  int const& /* nitems */,
+  int const& nitems,
   int& result)
 {
-  throw TBXX_NOT_IMPLEMENTED();
+  qread_(&iunit, (unsigned long*)(void*)buffer.begin(),
+         &nitems, &result);
 }
 
 inline
@@ -147,7 +182,7 @@ qqinq(
   str_ref filnam,
   int const& length)
 {
-  throw TBXX_NOT_IMPLEMENTED();
+  qqinq_(&iunit, lfn.elems(), filnam.elems(), &length, lfn.len(), filnam.len());
 }
 
 inline
