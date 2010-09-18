@@ -36,6 +36,18 @@ void qread_(
 void qclose_(
   int const* iunit);
 
+void qseek_(
+  int const* iunit,
+  int const* irec,
+  int const* iel,
+  int const* lrecl);
+
+void
+qwrite_(
+  int const* iunit,
+  const unsigned long* buffer,
+  int const* nitems);
+
 }
 
 using namespace fem::major_types;
@@ -53,11 +65,11 @@ qopen(
 inline
 void
 qwrite(
-  int const& /* iunit */,
-  arr_cref<int> /* buffer */,
-  int const& /* nitems */)
+  int const& iunit,
+  arr_cref<int> buffer,
+  int const& nitems)
 {
-  throw TBXX_NOT_IMPLEMENTED();
+  qwrite_(&iunit, (const unsigned long*)(const void*)buffer.begin(),&nitems);
 }
 
 inline
@@ -110,12 +122,12 @@ qclose(
 inline
 void
 qseek(
-  int const& /* iunit */,
-  int const& /* irec */,
-  int const& /* iel */,
-  int const& /* lrecl */)
+  int const& iunit,
+  int const& irec,
+  int const& iel,
+  int const& lrecl)
 {
-  throw TBXX_NOT_IMPLEMENTED();
+  qseek_(&iunit, &irec, &iel, &lrecl);
 }
 
 inline
@@ -126,7 +138,6 @@ qmode(
   int& size)
 {
   qmode_(&iunit, &mode, &size);
-  TBXX_EXAMINE(size);
 }
 
 inline

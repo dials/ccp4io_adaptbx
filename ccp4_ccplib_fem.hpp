@@ -77,8 +77,10 @@ inline
 bool
 litend()
 {
-  bool return_value = fem::bool0;
-  throw TBXX_NOT_IMPLEMENTED();
+  // true if the system byte-order is little endian
+  short int word = 0x0001;
+  char* byte = (char*) &word;
+  return byte[0]==0x01;
 }
 
 inline
