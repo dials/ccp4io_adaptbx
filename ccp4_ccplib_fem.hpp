@@ -141,6 +141,15 @@ lunsto(
   return 6;
 }
 
+inline
+bool
+hkleq(
+  arr_cref<int> ih,
+  arr_cref<int> kh)
+{
+  return (ih(1) == kh(1)) && (ih(2) == kh(2)) && (ih(3) == kh(3));
+}
+
 } // namespace ccp4_ccplib_fem
 
 #endif // GUARD

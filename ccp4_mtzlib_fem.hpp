@@ -74,6 +74,23 @@ lridx_(
   int dname_len);
 
 void
+lwbat_(
+  int const* mtzout,
+  int const* iserop,
+  /* arr_cref<float> */ float const* rbatch,
+  /* str_arr_cref<> */ char const* cbatch,
+  int cbatch_len);
+
+void
+lwbsetidx_(
+  int const* mtzout,
+  int const* iserop,
+  char const* crystalname,
+  char const* datasetname,
+  int crystalname_len,
+  int datasetname_len);
+
+void
 lrassn_(
   int const* mindx,
   /*str_arr_cref<>*/ char const* lsprgi,
@@ -312,23 +329,24 @@ lridx(
 inline
 void
 lwbat(
-  int const& /* mtzout */,
-  int const& /* iserop */,
-  arr_cref<float> /* rbatch */,
-  str_arr_cref<> /* cbatch */)
+  int const& mtzout,
+  int const& iserop,
+  arr_cref<float> rbatch,
+  str_arr_cref<> cbatch)
 {
-  throw TBXX_NOT_IMPLEMENTED();
+  lwbat_(&mtzout, &iserop, rbatch.begin(), cbatch.begin(), cbatch.len());
 }
 
 inline
 void
 lwbsetidx(
-  int const& /* mtzout */,
-  int const& /* iserop */,
-  str_cref /* crystalname */,
-  str_cref /* datasetname */)
+  int const& mtzout,
+  int const& iserop,
+  str_cref crystalname,
+  str_cref datasetname)
 {
-  throw TBXX_NOT_IMPLEMENTED();
+  lwbsetidx_(&mtzout, &iserop, crystalname.elems(), datasetname.elems(),
+                               crystalname.len(), datasetname.len());
 }
 
 inline

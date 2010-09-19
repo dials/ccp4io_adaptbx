@@ -255,15 +255,6 @@ epslon(
 }
 
 inline
-bool
-hkleq(
-  arr_cref<int> ih,
-  arr_cref<int> kh)
-{
-  throw TBXX_NOT_IMPLEMENTED();
-}
-
-inline
 void
 setrsl(
   float const& a,

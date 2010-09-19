@@ -48,6 +48,11 @@ qwrite_(
   const unsigned long* buffer,
   int const* nitems);
 
+void
+qback_(
+  int const* iunit,
+  int const* lrecl);
+
 }
 
 using namespace fem::major_types;
@@ -201,10 +206,10 @@ qqinq(
 inline
 void
 qback(
-  int const& /* iunit */,
-  int const& /* lrecl */)
+  int const& iunit,
+  int const& lrecl)
 {
-  throw TBXX_NOT_IMPLEMENTED();
+  qback_(&iunit, &lrecl);
 }
 
 inline
