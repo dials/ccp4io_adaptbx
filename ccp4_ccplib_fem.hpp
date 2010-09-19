@@ -13,6 +13,11 @@ ccp4_version_(
 void
 ccpfyp_();
 
+void
+ccpdat_(
+  char* caldat,
+  int caldat_len);
+
 }
 
 namespace ccp4_ccplib_fem {
@@ -53,7 +58,7 @@ void
 ccpdat(
   str_ref caldat)
 {
-  throw TBXX_NOT_IMPLEMENTED();
+  ccpdat_(caldat.elems(), caldat.len());
 }
 
 inline

@@ -140,6 +140,13 @@ lwhstl_(
   int extra_len);
 
 void
+lwhist_(
+  int const* mindx,
+  /* str_arr_cref<> */ char const* hstrng,
+  int const* nlines,
+  int hstrng_len);
+
+void
 lwopen_(
   int const* mindx,
   char const* filnam,
@@ -451,7 +458,7 @@ lwhist(
   str_arr_cref<> hstrng,
   int const& nlines)
 {
-  throw TBXX_NOT_IMPLEMENTED();
+  lwhist_(&mindx, hstrng.begin(), &nlines, hstrng.len());
 }
 
 inline

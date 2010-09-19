@@ -75,29 +75,29 @@ qwrite(
 inline
 void
 qwrite(
-  int const& /* iunit */,
-  fem::integer_star_2 const& /* buffer */,
-  int const& /* nitems */)
+  int const& iunit,
+  fem::integer_star_2 const& buffer,
+  int const& nitems)
 {
-  throw TBXX_NOT_IMPLEMENTED();
+  qwrite_(&iunit, (const unsigned long*)(const void*)(&buffer),&nitems);
 }
 
 inline
 void
 qwrite(
-  int const& /* iunit */,
-  arr_ref<fem::integer_star_2> /* buffer */,
-  int const& /* nitems */)
+  int const& iunit,
+  arr_ref<fem::integer_star_2> buffer,
+  int const& nitems)
 {
-  throw TBXX_NOT_IMPLEMENTED();
+  qwrite_(&iunit, (const unsigned long*)(const void*)buffer.begin(),&nitems);
 }
 
 inline
 void
 qwrite(
-  int const& /* iunit */,
-  arr_cref<fem::integer_star_8> /* buffer */,
-  int const& /* nitems */)
+  int const& iunit,
+  arr_cref<fem::integer_star_8> buffer,
+  int const& nitems)
 {
   throw TBXX_NOT_IMPLEMENTED();
 }
@@ -166,23 +166,25 @@ qread(
 inline
 void
 qread(
-  int const& /* iunit */,
+  int const& iunit,
   arr_ref<fem::integer_star_2> buffer,
-  int const& /* nitems */,
+  int const& nitems,
   int& result)
 {
-  throw TBXX_NOT_IMPLEMENTED();
+  qread_(&iunit, (unsigned long*)(void*)buffer.begin(),
+         &nitems, &result);
 }
 
 inline
 void
 qread(
-  int const& /* iunit */,
+  int const& iunit,
   arr_ref<int> buffer,
-  int const& /* nitems */,
+  int const& nitems,
   int& result)
 {
-  throw TBXX_NOT_IMPLEMENTED();
+  qread_(&iunit, (unsigned long*)(void*)buffer.begin(),
+         &nitems, &result);
 }
 
 inline
