@@ -24,6 +24,16 @@ pilatus_c_(
   /*arr_ref<fem::integer_star_2>*/ short* image,
   /*str_arr_cref<>*/ char const* odfile);
 
+void
+cbfwrap_(
+  int* ierr,
+  /*arr_ref<int>*/ int* cbf_int,
+  /*arr_ref<fem::integer_star_4>*/ int* cbf_int4,
+  /*arr_ref<double>*/ double* cbf_double,
+  /*str_arr_ref<>*/ char* cbf_char,
+  char const* odfile,
+  /*arr_ref<fem::integer_star_2>*/ short* image,
+  int const* mode);
 }
 
 namespace ccp4_mosflm_fem {
@@ -59,6 +69,22 @@ pilatus_c(
   str_arr_cref<> odfile)
 {
   pilatus_c_(&ierr, &mode, &nrec, &iylen, image.begin(), odfile.begin());
+}
+
+inline
+void
+cbfwrap(
+  int& ierr,
+  arr_ref<int> cbf_int,
+  arr_ref<fem::integer_star_4> cbf_int4,
+  arr_ref<double> cbf_double,
+  str_arr_ref<> cbf_char,
+  str_cref odfile,
+  arr_ref<fem::integer_star_2> image,
+  int const& mode)
+{
+  cbfwrap_(&ierr, cbf_int.begin(), cbf_int4.begin(), cbf_double.begin(),
+           cbf_char.begin(), odfile.elems(), image.begin(), &mode);
 }
 
 } // namespace ccp4_mosflm_fem
