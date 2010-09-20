@@ -48,6 +48,10 @@ qwrite_(
   const unsigned long* buffer,
   int const* nitems);
 
+bool
+qisnan_(
+  float const* value);
+
 void
 qback_(
   int const* iunit,
@@ -112,8 +116,7 @@ bool
 qisnan(
   float const& value)
 {
-  bool return_value = fem::bool0;
-  throw TBXX_NOT_IMPLEMENTED();
+  return qisnan_(&value);
 }
 
 inline
