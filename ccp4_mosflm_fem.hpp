@@ -34,6 +34,21 @@ cbfwrap_(
   char const* odfile,
   /*arr_ref<fem::integer_star_2>*/ short* image,
   int const* mode);
+
+int
+write_socket_length_(
+  int const *fd,
+  int const *length,
+  char const *line
+);
+
+int
+write_socket_section_(
+  int const *fd,
+  int const *length,
+  char const *line
+);
+
 }
 
 namespace ccp4_mosflm_fem {
@@ -85,6 +100,26 @@ cbfwrap(
 {
   cbfwrap_(&ierr, cbf_int.begin(), cbf_int4.begin(), cbf_double.begin(),
            cbf_char.begin(), odfile.elems(), image.begin(), &mode);
+}
+
+inline
+void
+write_socket_length(
+  int const& serverfd,
+  int const& len_line,
+  str_arr_cref<> line)
+{
+  write_socket_length_(&serverfd, &len_line, line.begin());
+}
+
+inline
+void
+write_socket_section(
+  int const& serverfd,
+  int const& len_line,
+  str_arr_cref<> line)
+{
+  write_socket_section_(&serverfd, &len_line, line.begin());
 }
 
 } // namespace ccp4_mosflm_fem
