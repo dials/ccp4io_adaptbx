@@ -11,7 +11,7 @@ env_etc.ccp4io_dist = libtbx.env.dist_path("ccp4io")
 env_etc.ccp4io_include = libtbx.env.under_dist("ccp4io", "lib/src")
 
 if (sys.platform == "win32"):
-  env_etc.ccp4io_defines = ["-Di386"]
+  env_etc.ccp4io_defines = ["/Di386", "/D_MVS"]
 else:
   env_etc.ccp4io_defines = []
 
