@@ -45,8 +45,11 @@ env.Append(SHCCFLAGS=env_etc.ccp4io_defines)
 if (libtbx.env.has_module("mosflm_fable")):
   env_etc.patch_scons_env_for_ad_hoc_debug(env=env)
 env_etc.include_registry.append(
-    env=env,
-    paths=["#", env_etc.ccp4io_include])
+  env=env,
+  paths=[
+    "#",
+    env_etc.ccp4io_include,
+    op.join(env_etc.ccp4io_include, "mmdb")])
 env.Append(LIBS=env_etc.libm)
 if (   op.normcase(op.dirname(env_etc.ccp4io_dist))
     != op.normcase("ccp4io")):
@@ -98,6 +101,41 @@ Required source file not found: %s
   Please update the ccp4io sources or re-run libtbx/configure.py
   without requesting solve_resolve.""" % show_string(probe_file_name))
 
+c_files.extend(["mmdb/%s.cpp" % bn for bn in """\
+bfgs_min
+file_
+hybrid_36
+linalg_
+machine_
+math_
+mattype_
+mmdb_align
+mmdb_atom
+mmdb_bondmngr
+mmdb_chain
+mmdb_cifdefs
+mmdb_coormngr
+mmdb_cryst
+mmdb_ficif
+mmdb_file
+mmdb_graph
+mmdb_manager
+mmdb_mask
+mmdb_mmcif
+mmdb_model
+mmdb_rwbrook
+mmdb_sbase
+mmdb_sbase0
+mmdb_selmngr
+mmdb_symop
+mmdb_tables
+mmdb_title
+mmdb_uddata
+mmdb_utils
+mmdb_xml
+random_n
+stream_
+""".splitlines()])
 prefix = "#"+op.join(op.basename(env_etc.ccp4io_dist), "lib", "src")
 for file_name in c_files:
   source.append(op.join(prefix, file_name))
@@ -124,3 +162,19 @@ library_f.c
 # static library for solve_resolve
 env.StaticLibrary(target='#lib/ccp4io', source=source)
 env_etc.ccp4io_lib = "ccp4io"
+
+if (    libtbx.env.has_module("boost")
+    and not env_etc.no_boost_python):
+  Import( "env_no_includes_boost_python_ext" )
+  sources = [ "#ccp4io_adaptbx/ext.cpp" ]
+  env_ext = env_no_includes_boost_python_ext.Clone()
+  env_ext.Prepend( LIBS = "ccp4io" )
+  env_etc.include_registry.append(
+    env = env_ext,
+    paths = [
+      os.path.join( env_etc.ccp4io_include, "mmdb" ),
+      env_etc.boost_include,
+      env_etc.python_include,
+      ]
+    )
+  env_ext.SharedLibrary( target = "#lib/ccp4io_adaptbx_ext", source = sources )
