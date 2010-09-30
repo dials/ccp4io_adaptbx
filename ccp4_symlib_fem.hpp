@@ -86,6 +86,19 @@ centr_(
   int* ic);
 
 void
+epsln_(
+  int const* nsm,
+  int const* nsmp,
+  /*arr_cref<float, 3>*/ float const* rsm,
+  int const* iprint);
+
+void
+epslon_(
+  /*arr_cref<int>*/ int const* ih,
+  float* epsi,
+  int* isysab);
+
+void
 setrsl_(
   float const* a,
   float const* b,
@@ -241,7 +254,7 @@ epsln(
   arr_cref<float, 3> rsm,
   int const& iprint)
 {
-  throw TBXX_NOT_IMPLEMENTED();
+  epsln_(&nsm, &nsmp, rsm.begin(), &iprint);
 }
 
 inline
@@ -251,7 +264,7 @@ epslon(
   float& epsi,
   int& isysab)
 {
-  throw TBXX_NOT_IMPLEMENTED();
+  epslon_(ih.begin(), &epsi, &isysab);
 }
 
 inline
