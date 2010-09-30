@@ -140,6 +140,17 @@ prefix = "#"+op.join(op.basename(env_etc.ccp4io_dist), "lib", "src")
 for file_name in c_files:
   source.append(op.join(prefix, file_name))
 
+ssm_prefix = "#"+op.join(op.basename(env_etc.ccp4io_dist), "lib", "ssm")
+ssm_sources = [
+  "ss_csia.cpp",
+  "ss_graph.cpp", 
+  "ss_vxedge.cpp",
+  "ssm_align.cpp",
+  "ssm_superpose.cpp",
+  ]
+
+source.extend( [ op.join( ssm_prefix, f ) for f in ssm_sources ] )
+
 if (need_f_c):
   source.append(op.join("#ccp4io_adaptbx", "fortran_call_stubs.c"))
   for file_name in """\
@@ -173,6 +184,7 @@ if (    libtbx.env.has_module("boost")
     env = env_ext,
     paths = [
       os.path.join( env_etc.ccp4io_include, "mmdb" ),
+      os.path.join( env_etc.ccp4io_dist, "lib", "ssm"),
       env_etc.boost_include,
       env_etc.python_include,
       ]

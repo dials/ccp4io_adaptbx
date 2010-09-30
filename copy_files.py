@@ -134,6 +134,16 @@ lib/src/mmdb/random_n.cpp
 lib/src/mmdb/random_n.h
 lib/src/mmdb/stream_.cpp
 lib/src/mmdb/stream_.h
+lib/ssm/ss_csia.cpp
+lib/ssm/ss_csia.h
+lib/ssm/ss_graph.cpp
+lib/ssm/ss_graph.h
+lib/ssm/ss_vxedge.cpp
+lib/ssm/ss_vxedge.h
+lib/ssm/ssm_align.cpp
+lib/ssm/ssm_align.h
+lib/ssm/ssm_superpose.cpp
+lib/ssm/ssm_superpose.h
 """.splitlines()
   for path in relative_paths:
     print path
