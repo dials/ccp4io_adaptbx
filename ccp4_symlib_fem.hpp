@@ -98,6 +98,11 @@ epslon_(
   float* epsi,
   int* isysab);
 
+int
+inasu_(
+  /*arr_cref<int>*/ int const* ihkl,
+  int const* nlaue);
+  
 void
 setrsl_(
   float const* a,
@@ -265,6 +270,15 @@ epslon(
   int& isysab)
 {
   epslon_(ih.begin(), &epsi, &isysab);
+}
+
+inline
+int
+inasu(
+  arr_cref<int> ihkl,
+  int const& nlaue)
+{
+  inasu_(ihkl.begin(), &nlaue);
 }
 
 inline
