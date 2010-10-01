@@ -102,7 +102,7 @@ int
 inasu_(
   /*arr_cref<int>*/ int const* ihkl,
   int const* nlaue);
-  
+
 void
 setrsl_(
   float const* a,
@@ -278,7 +278,7 @@ inasu(
   arr_cref<int> ihkl,
   int const& nlaue)
 {
-  inasu_(ihkl.begin(), &nlaue);
+  return inasu_(ihkl.begin(), &nlaue);
 }
 
 inline
