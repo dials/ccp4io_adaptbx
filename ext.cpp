@@ -7,8 +7,8 @@ namespace ccp4io_adaptbx { namespace boost_python {
 class PySSMAlign : public CSSMAlign
 {
   public:
-    PySSMAlign() {};
-    ~PySSMAlign() {};
+    PySSMAlign() {}
+    ~PySSMAlign() {}
 
     boost::python::tuple get_t_matrix() const
     {
@@ -45,7 +45,7 @@ class ResidueData
         resseq( resseq_ )
     {}
 
-    ~ResidueData() {};
+    ~ResidueData() {}
 };
 
 class PyXAlignText : public CXAlignText
@@ -54,8 +54,8 @@ class PyXAlignText : public CXAlignText
     int length;
 
   public:
-    PyXAlignText() : length( 0 ) {};
-    ~PyXAlignText() {};
+    PyXAlignText() : length( 0 ) {}
+    ~PyXAlignText() {}
 
     void py_x_align(PCMMDBManager m1, PCMMDBManager m2, PySSMAlign& cssm)
     {
@@ -155,12 +155,12 @@ init_module()
   object package = scope();
   package.attr( "__path__" ) = "ccp4io_adaptbx";
 
-  object mmdb_module(
+  object mmdb_module((
     handle<>( borrowed( PyImport_AddModule( "ccp4io_adaptbx.mmdb" ) ) )
-    );
-  object ssm_module(
+    ));
+  object ssm_module((
     handle<>( borrowed( PyImport_AddModule( "ccp4io_adaptbx.ssm" ) ) )
-    );
+    ));
   scope().attr( "mmdb" ) = mmdb_module;
   scope().attr( "ssm" ) = ssm_module;
   scope mmdb_scope = mmdb_module;
