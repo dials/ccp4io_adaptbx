@@ -5,6 +5,7 @@ def run(args):
   assert len(args) == 1
   source_root = args[0]
   relative_paths = """\
+lib/data/syminfo.lib
 lib/data/symop.lib
 lib/src/binsort.h
 lib/src/binsortint.c
