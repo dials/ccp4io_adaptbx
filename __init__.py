@@ -2,7 +2,11 @@ import boost.python
 ext = boost.python.import_ext("ccp4io_adaptbx_ext")
 from ccp4io_adaptbx_ext import *
 
+import libtbx.load_env
 import operator
+import os
+
+os.putenv("SYMINFO", libtbx.env.under_dist("ccp4io", "lib/data/syminfo.lib"))
 
 def to_mmdb(root, flags = []):
   "Converts iotbx.pdb.hierarchy object to an MMDB Manager"
@@ -54,7 +58,7 @@ class SecondaryStructureMatching(object):
       manager.Select(
         selHnd = handle,
         selType = mmdb.STYPE_ATOM,
-        cid = "*",  
+        cid = "*",
         selKey = mmdb.SKEY_NEW
         )
 
@@ -62,13 +66,13 @@ class SecondaryStructureMatching(object):
         raise RuntimeError, (
           "Empty atom selection for structure %s" % len( self.managers )
           )
-      
+
       self.managers.append( manager )
       handles.append( handle )
 
     assert len( self.managers ) == 2
     assert len( handles ) == 2
-    
+
     self.ssm = ssm.SSMAlign()
     rc = self.ssm.Align(
       manager1 = self.managers[0],
@@ -107,13 +111,13 @@ class SecondaryStructureMatching(object):
 
     return alignment
 
-  
+
   def calculate_alignment_blocks(self):
 
     align = ssm.XAlignText()
     align.XAlign(
       manager1 = self.managers[0],
-      manager2 = self.managers[1], 
+      manager2 = self.managers[1],
       ssm_align = self.ssm
       )
     self.blocks = align.get_blocks()

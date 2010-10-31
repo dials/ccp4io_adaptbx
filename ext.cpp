@@ -64,7 +64,7 @@ class PyXAlignText : public CXAlignText
 
       m1->GetSelIndex ( cssm.selHndCa1,Calpha1,nat1 );
       m2->GetSelIndex ( cssm.selHndCa2,Calpha2,nat2 );
-      
+
       XAlign(
         cssm.G1, Calpha1, cssm.Ca1, nat1,
         cssm.G2, Calpha2, cssm.Ca2, nat2,
@@ -139,14 +139,54 @@ class PyXAlignText : public CXAlignText
             );
           break;
         }
-          
+
         l.append( boost::python::make_tuple( equivs, info ) );
       }
 
       return l;
     }
 };
-    
+
+struct Manager_wrappers
+{
+  typedef CMMDBManager wt;
+
+  static
+  boost::python::object
+  GetSymOp_wrapper(
+    wt& O,
+    int Nop)
+  {
+    cpstr s = O.GetSymOp(Nop);
+    if (s == 0) return boost::python::object();
+    return boost::python::str(s);
+  }
+
+  static void
+  wrap()
+  {
+    using namespace boost::python;
+    class_<wt>( "Manager", init<>() )
+      .def( "SetFlag", &wt::SetFlag, ( arg( "flag" ) ) )
+      .def("ReadPDBASCII",
+        (int (wt::*)(cpstr, byte)) &wt::ReadPDBASCII, (
+          arg( "fileName" ), arg( "gzipMode" )))
+      .def( "PutPDBString", &wt::PutPDBString, ( arg( "pdbString" ) ) )
+      .def( "WritePDBASCII",
+        (int (wt::*)(cpstr, byte)) &wt::WritePDBASCII, (
+          arg( "fileName" ), arg( "gzipMode" )))
+      .def( "NewSelection", &wt::NewSelection )
+      .def("Select",
+        (int (wt::*)(int, int, cpstr, int)) &wt::Select, (
+          arg( "selHnd" ), arg( "selType" ), arg( "cid" ), arg( "selKey")))
+      .def( "GetSelLength", &wt::GetSelLength, ( arg( "selHnd" ) ) )
+      .def( "isSpaceGroup", &wt::isSpaceGroup )
+      .def( "GetNumberOfSymOps", &wt::GetNumberOfSymOps )
+      .def( "GetSymOp", GetSymOp_wrapper, ( arg( "Nop" ) ) )
+    ;
+  }
+};
+
 void
 init_module()
 {
@@ -171,25 +211,8 @@ init_module()
   mmdb_scope.attr( "SKEY_NEW" ) = SKEY_NEW;
   def( "GetErrorDescription", &GetErrorDescription );
 
-  int (CMMDBManager::*rpdb1)(cpstr, byte) = &CMMDBManager::ReadPDBASCII;
-  int (CMMDBManager::*wpdb1)(cpstr, byte) =
-    &CMMDBManager::WritePDBASCII;
-  int (CMMDBManager::*select1)(int, int, cpstr, int) = &CMMDBManager::Select;
-
   InitMatType();
-  class_< CMMDBManager >( "Manager", init<>() )
-    .def( "SetFlag", &CMMDBManager::SetFlag, ( arg( "flag" ) ) )
-    .def( "ReadPDBASCII", rpdb1, ( arg( "fileName" ), arg( "gzipMode" ) ) )
-    .def( "PutPDBString", &CMMDBManager::PutPDBString, ( arg( "pdbString" ) ) )
-    .def( "WritePDBASCII", wpdb1, ( arg( "fileName" ), arg( "gzipMode" ) ) )
-    .def( "NewSelection", &CMMDBManager::NewSelection )
-    .def(
-      "Select",
-      select1,
-      ( arg( "selHnd" ), arg( "selType" ), arg( "cid" ), arg( "selKey" ) )
-      )
-    .def( "GetSelLength", &CMMDBManager::GetSelLength, ( arg( "selHnd" ) ) )
-    ;
+  Manager_wrappers::wrap();
 
   scope ssm_scope = ssm_module;
   ssm_scope.attr( "C_Flexible" ) = CSSC_Flexible;
