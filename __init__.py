@@ -102,12 +102,10 @@ class SecondaryStructureMatching(object):
     alignment = []
 
     for ( ( f, s ), a ) in self.blocks:
-      alignment.append(
-        (
-          ( f.chain_id, f.resseq, f.inscode ) if f else None,
-          ( s.chain_id, s.resseq, s.inscode ) if s else None,
-          )
-        )
+      def get(o):
+        if (o is None): return None
+        return ( o.chain_id, o.resseq, o.inscode )
+      alignment.append((get(f), get(s)))
 
     return alignment
 
