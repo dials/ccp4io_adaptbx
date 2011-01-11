@@ -75,17 +75,25 @@ class PyXAlignText : public CXAlignText
     boost::python::list get_blocks()
     {
       boost::python::list l;
-      boost::python::tuple equivs;
 
       PSXTAlign XTA = GetTextRows();
 
       for( int i = 0; i < length; ++i)
       {
+        boost::python::tuple equivs;
         boost::python::tuple info;
 
         switch ( XTA[i].alignKey )
         {
         case 0: // KEY_ALIGNED
+          info = boost::python::make_tuple(
+            XTA[i].dist,
+            XTA[i].loopNo,
+            XTA[i].simindex
+            );
+            // no break!
+
+        case 1: // KEY_NOT_ALIGNED
           equivs = boost::python::make_tuple(
             ResidueData(
               XTA[i].hydropathy1,
@@ -103,11 +111,6 @@ class PyXAlignText : public CXAlignText
               XTA[i].sseType2,
               XTA[i].seqNum2
               )
-            );
-          info = boost::python::make_tuple(
-            XTA[i].dist,
-            XTA[i].loopNo,
-            XTA[i].simindex
             );
           break;
 
