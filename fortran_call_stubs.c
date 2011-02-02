@@ -22,7 +22,7 @@ FORTRAN_SUBR ( GETARG, getarg,
                (int *i, char *arg, int arg_len),
                (int *i, char *arg, int arg_len))
 { /*bail("FORTRAN getarg");*/
-  *arg = "\0";
+  *arg = '\0';
 }
 
 FORTRAN_SUBR ( CCP4H_INIT, ccp4h_init,
