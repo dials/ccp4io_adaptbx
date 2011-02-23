@@ -50,7 +50,7 @@ class SecondaryStructureMatching(object):
     ):
 
     self.managers = []
-    handles = []
+    self.handles = []
 
     for ( i, r ) in enumerate( [ moving, reference ] ):
       manager = to_mmdb( root = r )
@@ -68,10 +68,10 @@ class SecondaryStructureMatching(object):
           )
 
       self.managers.append( manager )
-      handles.append( handle )
+      self.handles.append( handle )
 
     assert len( self.managers ) == 2
-    assert len( handles ) == 2
+    assert len(self.handles ) == 2
 
     self.ssm = ssm.SSMAlign()
     rc = self.ssm.Align(
@@ -79,14 +79,45 @@ class SecondaryStructureMatching(object):
       manager2 = self.managers[1],
       precision = precision,
       connectivity = connectivity,
-      selHnd1 = handles[0],
-      selHnd2 = handles[1],
+      selHnd1 = self.handles[0],
+      selHnd2 = self.handles[1],
       )
-
+    self.qvalues = self.ssm.GetQvalues()
+    self.nmatches= len(self.qvalues)
+    print "%d matches found by SSM" %self.nmatches
     if rc != ssm.RC_Ok:
       raise RuntimeError, ssm.GetErrorDescription( rc = rc )
 
     self.blocks = None
+
+
+
+
+  def GetQvalues(self):
+      return self.ssm.GetQvalues()
+
+
+
+  def AlignSelectedMatch(self, nselected):
+    if nselected >= self.nmatches:
+        print "Not that many matches available"
+        return
+
+    rc = self.ssm.AlignSelectedMatch(
+      manager1 = self.managers[0],
+      manager2 = self.managers[1],
+      precision = ssm.P_Normal,
+      connectivity = ssm.C_Flexible,
+      selHnd1 = self.handles[0],
+      selHnd2 = self.handles[1],
+      nselected = nselected
+      )
+    if rc != ssm.RC_Ok:
+      raise RuntimeError, ssm.GetErrorDescription( rc = rc )
+
+    self.blocks = None
+
+
 
 
   def get_matrix(self):
@@ -119,3 +150,7 @@ class SecondaryStructureMatching(object):
       ssm_align = self.ssm
       )
     self.blocks = align.get_blocks()
+
+
+
+
