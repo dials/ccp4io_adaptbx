@@ -18,6 +18,19 @@ class PySSMAlign : public CSSMAlign
         TMatrix[2][0], TMatrix[2][1], TMatrix[2][2], TMatrix[2][3]
         );
     }
+
+    boost::python::list get_q_values() const
+    {
+        boost::python::list l;
+        realtype* pqvalues = GetQvalues();
+
+        for ( int i = 0; i < GetNMatches(); ++i )
+        {
+            l.append( pqvalues[ i ] );
+        }
+
+        return l;
+    }
 };
 
 class ResidueData
@@ -150,6 +163,8 @@ class PyXAlignText : public CXAlignText
     }
 };
 
+
+
 struct Manager_wrappers
 {
   typedef CMMDBManager wt;
@@ -235,6 +250,13 @@ init_module()
       &PySSMAlign::Align,
       ( arg( "manager1" ), arg( "manager2" ), arg( "precision" ),
         arg( "connectivity" ), arg( "selHnd1" ), arg( "selHnd2" ) )
+      )
+    .def( "GetQvalues", &PySSMAlign::get_q_values )
+    .def(
+      "AlignSelectedMatch",
+      &PySSMAlign::AlignSelectedMatch,
+      ( arg( "manager1" ), arg( "manager2" ), arg( "precision" ),
+        arg( "connectivity" ), arg( "selHnd1" ), arg( "selHnd2" ), arg( "nselected" ) )
       )
     .def_readonly( "rmsd", &PySSMAlign::rmsd )
     .def_readonly( "n_align", &PySSMAlign::nalgn )

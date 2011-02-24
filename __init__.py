@@ -39,7 +39,7 @@ ssm.GetErrorDescription = lambda rc: (
   )
 
 class SecondaryStructureMatching(object):
-  "SSM alignment with iotbx.pdb.hierarchy objects"
+  "SSM matching with iotbx.pdb.hierarchy objects"
 
   def __init__(
     self,
@@ -49,11 +49,12 @@ class SecondaryStructureMatching(object):
     connectivity = ssm.C_Flexible
     ):
 
+    self.chains = []
     self.managers = []
-    handles = []
+    self.handles = []
 
-    for ( i, r ) in enumerate( [ moving, reference ] ):
-      manager = to_mmdb( root = r )
+    for chain in [ moving, reference ]:
+      manager = to_mmdb( root = chain )
       handle = manager.NewSelection()
       manager.Select(
         selHnd = handle,
@@ -64,14 +65,16 @@ class SecondaryStructureMatching(object):
 
       if manager.GetSelLength( selHnd = handle ) <= 0:
         raise RuntimeError, (
-          "Empty atom selection for structure %s" % len( self.managers )
+          "Empty atom selection for structure %s" % ( len( self.managers ) + 1 )
           )
 
+      self.chains.append( chain )
       self.managers.append( manager )
-      handles.append( handle )
+      self.handles.append( handle )
 
+    assert len( self.chains ) == 2
     assert len( self.managers ) == 2
-    assert len( handles ) == 2
+    assert len(self.handles ) == 2
 
     self.ssm = ssm.SSMAlign()
     rc = self.ssm.Align(
@@ -79,14 +82,36 @@ class SecondaryStructureMatching(object):
       manager2 = self.managers[1],
       precision = precision,
       connectivity = connectivity,
-      selHnd1 = handles[0],
-      selHnd2 = handles[1],
+      selHnd1 = self.handles[0],
+      selHnd2 = self.handles[1],
       )
 
+    self.blocks = None
+
+
+
+
+  def GetQvalues(self):
+      return self.ssm.GetQvalues()
+
+
+
+  def AlignSelectedMatch(self, nselected):
+    if nselected >= len(self.ssm.GetQvalues()):
+        print "Not that many matches available"
+        return
+
+    rc = self.ssm.AlignSelectedMatch(
+      manager1 = self.managers[0],
+      manager2 = self.managers[1],
+      precision = ssm.P_Normal,
+      connectivity = ssm.C_Flexible,
+      selHnd1 = self.handles[0],
+      selHnd2 = self.handles[1],
+      nselected = nselected
+      )
     if rc != ssm.RC_Ok:
       raise RuntimeError, ssm.GetErrorDescription( rc = rc )
-
-    self.blocks = None
 
 
   def get_matrix(self):
@@ -94,28 +119,42 @@ class SecondaryStructureMatching(object):
     return self.ssm.t_matrix
 
 
-  def get_alignment(self):
+class SSMAlignment(object):
+  "SSM alignment from SSM match"
 
-    if not self.blocks:
-      self.calculate_alignment_blocks()
-
-    alignment = []
-
-    for ( ( f, s ), a ) in self.blocks:
-      def get(o):
-        if (o is None): return None
-        return ( o.chain_id, o.resseq, o.inscode )
-      alignment.append((get(f), get(s)))
-
-    return alignment
-
-
-  def calculate_alignment_blocks(self):
+  def __init__(self, match, indexer):
 
     align = ssm.XAlignText()
     align.XAlign(
-      manager1 = self.managers[0],
-      manager2 = self.managers[1],
-      ssm_align = self.ssm
+      manager1 = match.managers[0],
+      manager2 = match.managers[1],
+      ssm_align = match.ssm
       )
-    self.blocks = align.get_blocks()
+    indexer1 = indexer( chain = match.chains[0] )
+    indexer2 = indexer( chain = match.chains[1] )
+    self.pairs = []
+    self.stats = []
+
+    for ( ( f, s ), a ) in align.get_blocks():
+      def get(rgi, indexer):
+        if (rgi is None):
+            return None
+
+        identifier = ( rgi.chain_id, rgi.resseq, rgi.inscode )
+        assert identifier in indexer
+        return indexer[ identifier ]
+
+      self.pairs.append( ( get( f, indexer1 ), get( s, indexer2 ) ) )
+      self.stats.append( a )
+
+
+  def residue_groups(cls, match):
+
+    indexer = lambda chain: dict(
+      [ ( ( chain.id, rg.resseq_as_int(), rg.icode ), rg )
+        for rg in chain.residue_groups() ]
+      )
+
+    return cls( match = match, indexer = indexer )
+
+  residue_groups = classmethod( residue_groups )
