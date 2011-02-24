@@ -2,7 +2,6 @@
 #include <mmdb_manager.h>
 #include <ssm_align.h>
 
-
 namespace ccp4io_adaptbx { namespace boost_python {
 
 class PySSMAlign : public CSSMAlign
@@ -18,19 +17,6 @@ class PySSMAlign : public CSSMAlign
         TMatrix[1][0], TMatrix[1][1], TMatrix[1][2], TMatrix[1][3],
         TMatrix[2][0], TMatrix[2][1], TMatrix[2][2], TMatrix[2][3]
         );
-    }
-
-    boost::python::list get_q_values() const
-    {
-        boost::python::list l;
-        realtype* pqvalues = GetQvalues();
-
-        for ( int i = 0; i < GetNMatches(); ++i )
-        {
-            l.append( pqvalues[ i ] );
-        }
-
-        return l;
     }
 };
 
@@ -164,8 +150,6 @@ class PyXAlignText : public CXAlignText
     }
 };
 
-
-
 struct Manager_wrappers
 {
   typedef CMMDBManager wt;
@@ -251,13 +235,6 @@ init_module()
       &PySSMAlign::Align,
       ( arg( "manager1" ), arg( "manager2" ), arg( "precision" ),
         arg( "connectivity" ), arg( "selHnd1" ), arg( "selHnd2" ) )
-      )
-    .def( "GetQvalues", &PySSMAlign::get_q_values )
-    .def(
-      "AlignSelectedMatch",
-      &PySSMAlign::AlignSelectedMatch,
-      ( arg( "manager1" ), arg( "manager2" ), arg( "precision" ),
-        arg( "connectivity" ), arg( "selHnd1" ), arg( "selHnd2" ), arg( "nselected" ) )
       )
     .def_readonly( "rmsd", &PySSMAlign::rmsd )
     .def_readonly( "n_align", &PySSMAlign::nalgn )
