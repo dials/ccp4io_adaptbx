@@ -234,7 +234,11 @@ init_module()
 
   scope ssm_scope = ssm_module;
   ssm_scope.attr( "C_Flexible" ) = CSSC_Flexible;
-  ssm_scope.attr( "P_Normal" ) = SSMP_Normal;
+  ssm_scope.attr( "P_Highest" ) = SSMP_Highest;
+  ssm_scope.attr( "P_High" ) = SSMP_High;
+  ssm_scope.attr( "P_Normal" ) = SSMP_Normal ;
+  ssm_scope.attr( "P_Low" ) = SSMP_Low ;
+  ssm_scope.attr( "P_Lowest" ) = SSMP_Lowest ;
   ssm_scope.attr( "RC_Ok" ) = SSM_Ok;
   ssm_scope.attr( "RC_noHits" ) = SSM_noHits;
   ssm_scope.attr( "RC_noSPSN" ) = SSM_noSPSN;
