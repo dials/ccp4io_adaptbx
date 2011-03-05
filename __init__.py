@@ -8,21 +8,38 @@ import os
 
 os.putenv("SYMINFO", libtbx.env.under_dist("ccp4io", "lib/data/syminfo.lib"))
 
-def to_mmdb(root, flags = []):
+def to_mmdb(root, flags = [], remove_duplicates = True):
   "Converts iotbx.pdb.hierarchy object to an MMDB Manager"
 
   manager = mmdb.Manager()
 
+  if remove_duplicates:
+    selector = select_atoms_with_same_resname
+
+  else:
+    selector = lambda rg: rg.atoms()
+
   if flags:
     manager.SetFlag( reduce( operator.or_, flags ) )
 
-  for atom in root.atoms():
-    rc = manager.PutPDBString( atom.format_atom_record() )
+  for rg in root.residue_groups():
+    for atom in selector( rg = rg ):
+      rc = manager.PutPDBString( atom.format_atom_record() )
 
-    if 0 < rc:
-      raise RuntimeError, mmdb.GetErrorDescription( rc )
+      if 0 < rc:
+        raise RuntimeError, mmdb.GetErrorDescription( rc )
 
   return manager
+
+
+def select_atoms_with_same_resname(rg):
+
+  atoms_in = {}
+
+  for a in rg.atoms():
+    atoms_in.setdefault( a.parent().resname, [] ).append( a )
+
+  return max( atoms_in.values(), key = lambda s: len( s ) )
 
 
 ssm.ERROR_DESCRIPTION_FOR = {
@@ -85,15 +102,12 @@ class SecondaryStructureMatching(object):
       selHnd1 = self.handles[0],
       selHnd2 = self.handles[1],
       )
-
-    self.blocks = None
-
-
+    if rc != ssm.RC_Ok:
+      raise RuntimeError, ssm.GetErrorDescription( rc = rc )
 
 
   def GetQvalues(self):
       return self.ssm.GetQvalues()
-
 
 
   def AlignSelectedMatch(self, nselected):
