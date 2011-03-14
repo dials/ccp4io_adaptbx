@@ -1,6 +1,7 @@
 from libtbx.utils import Sorry
 from libtbx.str_utils import show_string
 import libtbx.load_env
+import libtbx
 import re
 import sys, os
 op = os.path
@@ -38,8 +39,14 @@ def replace_printf(file_name):
     result.append(line)
   return "\n".join(result)
 
-env = env_base.Clone(
-  SHLINKFLAGS=env_etc.shlinkflags)
+env = env_base.Clone(SHLINKFLAGS=env_etc.shlinkflags)
+
+if ( not libtbx.env_config.is_64bit_architecture()
+  and env_etc.gcc_version is not None
+  and 40400 <= env_etc.gcc_version and env_etc.gcc_version < 40500 ):
+  flags = [ f for f in env[ "CCFLAGS" ] if f != "-ffast-math" ]
+  env.Replace(CCFLAGS=flags)
+
 env.Append(CCFLAGS=env_etc.ccp4io_defines)
 env.Append(SHCCFLAGS=env_etc.ccp4io_defines)
 if False and (libtbx.env.has_module("mosflm_fable")):
