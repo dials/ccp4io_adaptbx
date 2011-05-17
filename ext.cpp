@@ -49,7 +49,9 @@ class ResidueData
       int resseq_
       )
       : hydropathy( hydropathy_ ),
-        chain_id( boost::python::str( chain_id_, 1 ) ),
+        chain_id(
+          chain_id_[0] == '\0' ? " " : boost::python::str( chain_id_, 1 )
+          ),
         resname( boost::python::str( resname_, 3 ) ),
         inscode(
           inscode_[0] == '\0' ? " " : boost::python::str( inscode_, 1 )

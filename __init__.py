@@ -155,7 +155,7 @@ class SSMAlignment(object):
             return None
 
         identifier = ( rgi.chain_id, rgi.resseq, rgi.inscode )
-        assert identifier in indexer
+        assert identifier in indexer, "Id %s missing" % str( identifier )
         return indexer[ identifier ]
 
       self.pairs.append( ( get( f, indexer1 ), get( s, indexer2 ) ) )
