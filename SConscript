@@ -47,6 +47,12 @@ if ( not libtbx.env_config.is_64bit_architecture()
   flags = [ f for f in env[ "CCFLAGS" ] if f != "-ffast-math" ]
   env.Replace(CCFLAGS=flags)
 
+if ( libtbx.env_config.is_64bit_architecture()
+  and env_etc.gcc_version is not None
+  and 40200 <= env_etc.gcc_version and env_etc.gcc_version < 40300 ):
+  flags = [ f for f in env[ "CCFLAGS" ] if f != "-ffast-math" ]
+  env.Replace(CCFLAGS=flags)
+
 env.Append(CCFLAGS=env_etc.ccp4io_defines)
 env.Append(SHCCFLAGS=env_etc.ccp4io_defines)
 if False and (libtbx.env.has_module("mosflm_fable")):
