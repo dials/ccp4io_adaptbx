@@ -146,12 +146,32 @@ lib/ssm/ssm_align.h
 lib/ssm/ssm_superpose.cpp
 lib/ssm/ssm_superpose.h
 """.splitlines()
+  n_makedirs = 0
+  n_copied = 0
+  n_updated = 0
+  n_already_up_to_date = 0
   for path in relative_paths:
-    print path
     dir = op.split(path)[0]
     if (dir != "" and not op.isdir(dir)):
       os.makedirs(dir)
-    open(path, "wb").write(open(op.join(source_root, path), "rb").read())
+      n_makedirs += 1
+    source = open(op.join(source_root, path), "rb").read()
+    if (not op.isfile(path)):
+      n_copied += 1
+    else:
+      target = open(path, "rb").read()
+      if (target == source):
+        n_already_up_to_date += 1
+        source = None
+      else:
+        n_updated += 1
+    if (source is not None):
+      open(path, "wb").write(source)
+  print "Directories created:", n_makedirs
+  print "Files copied:", n_copied
+  print "Files updated:", n_updated
+  print "Files already up-to-date:", n_already_up_to_date
+  print "Done."
 
 if (__name__ == "__main__"):
   run(args=sys.argv[1:])
