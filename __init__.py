@@ -39,7 +39,7 @@ def select_atoms_with_same_resname(rg):
   for a in rg.atoms():
     atoms_in.setdefault( a.parent().resname, [] ).append( a )
 
-  return max( atoms_in.values(), key = lambda s: len( s ) )
+  return max([len(_) for _ in atoms_in.values()])
 
 
 ssm.ERROR_DESCRIPTION_FOR = {
