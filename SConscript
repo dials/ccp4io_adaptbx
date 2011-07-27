@@ -1,7 +1,6 @@
 from libtbx.utils import Sorry
 from libtbx.str_utils import show_string
 import libtbx.load_env
-import libtbx
 import re
 import sys, os
 op = os.path
@@ -9,14 +8,25 @@ op = os.path
 Import("env_base", "env_etc")
 
 env_etc.ccp4io_dist = libtbx.env.dist_path("ccp4io")
-env_etc.ccp4io_include = libtbx.env.under_dist("ccp4io", "lib/src")
 
 if (sys.platform == "win32"):
   env_etc.ccp4io_defines = ["/Di386", "/D_MVS"]
 else:
   env_etc.ccp4io_defines = []
 
-path_lib_src = op.join(env_etc.ccp4io_dist, "lib", "src")
+probe_file_name=op.join(env_etc.ccp4io_dist, "lib", "src", "ccp4_errno.h")
+if (op.isfile(probe_file_name)):
+  path_lib_src = op.join(env_etc.ccp4io_dist, "lib", "src")
+  ccp4_src = "src"
+  mmdb_src = "src"
+  env_etc.ccp4io_include = libtbx.env.under_dist(
+    module_name="ccp4io", path="lib/src")
+else:
+  path_lib_src = op.join(env_etc.ccp4io_dist, "lib", "libccp4", "ccp4")
+  ccp4_src = op.join("libccp4", "ccp4")
+  mmdb_src = "mmdb"
+  env_etc.ccp4io_include = libtbx.env.under_dist(
+    module_name="ccp4io", path="lib/libccp4/ccp4")
 
 build_ccp4io_adaptbx = libtbx.env.under_build("ccp4io_adaptbx")
 if (not op.isdir(build_ccp4io_adaptbx)):
@@ -39,46 +49,33 @@ def replace_printf(file_name):
     result.append(line)
   return "\n".join(result)
 
-env = env_base.Clone(SHLINKFLAGS=env_etc.shlinkflags)
-
-if ( not libtbx.env_config.is_64bit_architecture()
-  and env_etc.gcc_version is not None
-  and 40400 <= env_etc.gcc_version and env_etc.gcc_version < 40500 ):
-  flags = [ f for f in env[ "CCFLAGS" ] if f != "-ffast-math" ]
-  env.Replace(CCFLAGS=flags)
-
-if ( libtbx.env_config.is_64bit_architecture()
-  and env_etc.gcc_version is not None
-  and 40200 <= env_etc.gcc_version and env_etc.gcc_version < 40300 ):
-  flags = [ f for f in env[ "CCFLAGS" ] if f != "-ffast-math" ]
-  env.Replace(CCFLAGS=flags)
-
+env = env_base.Clone(
+  SHLINKFLAGS=env_etc.shlinkflags)
 env.Append(CCFLAGS=env_etc.ccp4io_defines)
 env.Append(SHCCFLAGS=env_etc.ccp4io_defines)
-if False and (libtbx.env.has_module("mosflm_fable")):
-  env_etc.patch_scons_env_for_ad_hoc_debug(env=env)
 env_etc.include_registry.append(
   env=env,
   paths=[
     "#",
     env_etc.ccp4io_include,
-    op.join(env_etc.ccp4io_include, "mmdb")])
+    op.join(env_etc.ccp4io_dist, "lib", mmdb_src, "mmdb")])
 env.Append(LIBS=env_etc.libm)
 if (   op.normcase(op.dirname(env_etc.ccp4io_dist))
     != op.normcase("ccp4io")):
   env.Repository(op.dirname(env_etc.ccp4io_dist))
 source = []
 
-c_files = [
-  "library_err.c",
-  "library_file.c",
-  "library_utils.c",
-  "ccp4_array.c",
-  "ccp4_parser.c",
-  "ccp4_unitcell.c",
-  "cvecmat.c",
-  "cmtzlib.c",
-]
+c_files = []
+c_files.extend(["%s/%s" % (ccp4_src, bn ) for bn in """\
+library_err.c
+library_file.c
+library_utils.c
+ccp4_array.c
+ccp4_parser.c
+ccp4_unitcell.c
+cvecmat.c
+cmtzlib.c
+""".splitlines()])
 open(op.join(build_ccp4io_adaptbx, "csymlib.c"), "w").write(
   open(op.join(path_lib_src, "csymlib.c")).read()
     .replace(
@@ -89,32 +86,19 @@ source.append(op.join("#ccp4io_adaptbx", "csymlib.c"))
 probe_file_name = op.join(path_lib_src, "cmaplib.h")
 env_etc.ccp4io_has_cmaplib = op.isfile(probe_file_name)
 if (env_etc.ccp4io_has_cmaplib):
-  c_files.extend([
-    "cmap_accessor.c",
-    "cmap_close.c",
-    "cmap_data.c",
-    "cmap_header.c",
-    "cmap_labels.c",
-    "cmap_open.c",
-    "cmap_skew.c",
-    "cmap_stats.c",
-    "cmap_symop.c",
-])
+  c_files.extend(["%s/%s" % (ccp4_src, bn ) for bn in """\
+cmap_accessor.c
+cmap_close.c
+cmap_data.c
+cmap_header.c
+cmap_labels.c
+cmap_open.c
+cmap_skew.c
+cmap_stats.c
+cmap_symop.c
+""".splitlines()])
 
-need_f_c = (
-     libtbx.env.has_module("solve_resolve")
-  or libtbx.env.find_in_repositories(relative_path="mosflm_fable"))
-if (need_f_c):
-  for probe_file_name in [
-        "lib/src/ccp4_fortran.h"]:
-    probe_file_name = op.join(env_etc.ccp4io_dist, probe_file_name)
-    if (not op.isfile(probe_file_name)):
-      raise Sorry("""\
-Required source file not found: %s
-  Please update the ccp4io sources or re-run libtbx/configure.py
-  without requesting solve_resolve.""" % show_string(probe_file_name))
-
-c_files.extend(["mmdb/%s.cpp" % bn for bn in """\
+c_files.extend(["%s/mmdb/%s.cpp" % ( mmdb_src, bn ) for bn in """\
 bfgs_min
 file_
 hybrid_36
@@ -149,24 +133,22 @@ mmdb_xml
 random_n
 stream_
 """.splitlines()])
-prefix = "#"+op.join(op.basename(env_etc.ccp4io_dist), "lib", "src")
+prefix = "#"+op.join(op.basename(env_etc.ccp4io_dist), "lib")
 for file_name in c_files:
   source.append(op.join(prefix, file_name))
 
 ssm_prefix = "#"+op.join(op.basename(env_etc.ccp4io_dist), "lib", "ssm")
-ssm_sources = [
-  "ss_csia.cpp",
-  "ss_graph.cpp", 
-  "ss_vxedge.cpp",
-  "ssm_align.cpp",
-  "ssm_superpose.cpp",
-  ]
-
+ssm_sources = """\
+ss_csia.cpp
+ss_graph.cpp
+ss_vxedge.cpp
+ssm_align.cpp
+ssm_superpose.cpp
+""".splitlines()
 source.extend( [ op.join( ssm_prefix, f ) for f in ssm_sources ] )
 
-if (need_f_c):
-  source.append(op.join("#ccp4io_adaptbx", "fortran_call_stubs.c"))
-  for file_name in """\
+source.append(op.join("#ccp4io_adaptbx", "fortran_call_stubs.c"))
+for file_name in """\
 ccp4_diskio_f.c
 ccp4_general.c
 ccp4_general_f.c
@@ -178,10 +160,10 @@ cmtzlib_f.c
 csymlib_f.c
 library_f.c
 """.splitlines():
-    open(op.join(build_ccp4io_adaptbx, file_name), "w").write(
-      replace_printf(file_name=file_name))
-    source.append(op.join("#ccp4io_adaptbx", file_name))
-  source.append(op.join("#ccp4io_adaptbx", "printf_wrappers.c"))
+  open(op.join(build_ccp4io_adaptbx, file_name), "w").write(
+    replace_printf(file_name=file_name))
+  source.append(op.join("#ccp4io_adaptbx", file_name))
+source.append(op.join("#ccp4io_adaptbx", "printf_wrappers.c"))
 
 # static library for solve_resolve
 env.StaticLibrary(target='#lib/ccp4io', source=source)
@@ -196,7 +178,7 @@ if (    libtbx.env.has_module("boost")
   env_etc.include_registry.append(
     env = env_ext,
     paths = [
-      os.path.join( env_etc.ccp4io_include, "mmdb" ),
+      os.path.join( env_etc.ccp4io_dist, "lib", mmdb_src, "mmdb" ),
       os.path.join( env_etc.ccp4io_dist, "lib", "ssm"),
       env_etc.boost_include,
       env_etc.python_include,
