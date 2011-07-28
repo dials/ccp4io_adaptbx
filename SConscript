@@ -1,4 +1,3 @@
-from libtbx.utils import Sorry
 from libtbx.str_utils import show_string
 import libtbx.load_env
 import re
@@ -147,8 +146,12 @@ ssm_superpose.cpp
 """.splitlines()
 source.extend( [ op.join( ssm_prefix, f ) for f in ssm_sources ] )
 
-source.append(op.join("#ccp4io_adaptbx", "fortran_call_stubs.c"))
-for file_name in """\
+need_f_c = (
+     libtbx.env.has_module("solve_resolve")
+  or libtbx.env.find_in_repositories(relative_path="mosflm_fable"))
+if (need_f_c or os.name != "nt"):
+  source.append(op.join("#ccp4io_adaptbx", "fortran_call_stubs.c"))
+  for file_name in """\
 ccp4_diskio_f.c
 ccp4_general.c
 ccp4_general_f.c
@@ -160,10 +163,10 @@ cmtzlib_f.c
 csymlib_f.c
 library_f.c
 """.splitlines():
-  open(op.join(build_ccp4io_adaptbx, file_name), "w").write(
-    replace_printf(file_name=file_name))
-  source.append(op.join("#ccp4io_adaptbx", file_name))
-source.append(op.join("#ccp4io_adaptbx", "printf_wrappers.c"))
+    open(op.join(build_ccp4io_adaptbx, file_name), "w").write(
+      replace_printf(file_name=file_name))
+    source.append(op.join("#ccp4io_adaptbx", file_name))
+  source.append(op.join("#ccp4io_adaptbx", "printf_wrappers.c"))
 
 # static library for solve_resolve
 env.StaticLibrary(target='#lib/ccp4io', source=source)
