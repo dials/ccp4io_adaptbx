@@ -33,9 +33,11 @@ if (not op.isdir(build_ccp4io_adaptbx)):
   assert op.isdir(build_ccp4io_adaptbx)
 
 def replace_printf(file_name):
-  file_name = op.join(path_lib_src, file_name)
+  full_path = op.join(path_lib_src, file_name)
+  if (not op.isfile(full_path)):
+    full_path = op.join(op.dirname(path_lib_src), "fortran", file_name)
   result = ["#include <ccp4io_adaptbx/printf_wrappers.h>"]
-  for line in open(file_name).read().splitlines():
+  for line in open(full_path).read().splitlines():
     for key in ["printf", "fprintf"]:
       matches = list(re.finditer(
         pattern="[^A-Za-z0-9_]%s[^A-Za-z0-9_]" % key, string=line))
