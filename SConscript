@@ -8,7 +8,7 @@ Import("env_base", "env_etc")
 
 env_etc.ccp4io_dist = libtbx.env.dist_path("ccp4io")
 
-if (sys.platform == "win32"):
+if env_etc.compiler == "win32_cl":
   env_etc.ccp4io_defines = ["/Di386", "/D_MVS"]
 else:
   env_etc.ccp4io_defines = []
