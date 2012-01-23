@@ -59,6 +59,7 @@ env_etc.include_registry.append(
   paths=[
     "#",
     env_etc.ccp4io_include,
+    op.join(env_etc.ccp4io_dist, "lib", mmdb_src),
     op.join(env_etc.ccp4io_dist, "lib", mmdb_src, "mmdb")])
 env.Append(LIBS=env_etc.libm)
 if (   op.normcase(op.dirname(env_etc.ccp4io_dist))
@@ -183,6 +184,7 @@ if (    libtbx.env.has_module("boost")
   env_etc.include_registry.append(
     env = env_ext,
     paths = [
+      os.path.join( env_etc.ccp4io_dist, "lib", mmdb_src ),
       os.path.join( env_etc.ccp4io_dist, "lib", mmdb_src, "mmdb" ),
       os.path.join( env_etc.ccp4io_dist, "lib", "ssm"),
       env_etc.boost_include,
