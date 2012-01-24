@@ -154,7 +154,10 @@ lib/ssm/ssm_superpose.h
     if (dir != "" and not op.isdir(dir)):
       os.makedirs(dir)
       n_makedirs += 1
-    source = open(op.join(source_root, path), "rb").read()
+    source = open(op.join(source_root, path), "rb").read() \
+      .replace(
+        "#undef PACKAGE_ROOT",
+        "#define PACKAGE_ROOT NULL")
     tpath = path
     if (tpath.endswith(".in")):
         tpath = tpath[:-3]
