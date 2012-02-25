@@ -5,8 +5,8 @@ def run(args):
   assert len(args) == 1
   source_root = args[0]
   relative_paths = """\
-lib/data/syminfo.lib
-lib/data/symop.lib
+lib/libccp4/data/syminfo.lib
+lib/libccp4/data/symop.lib
 lib/libccp4/config.h.in
 lib/libccp4/ccp4/ccp4_array.c
 lib/libccp4/ccp4/ccp4_array.h
