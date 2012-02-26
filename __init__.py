@@ -5,8 +5,17 @@ from ccp4io_adaptbx_ext import *
 import libtbx.load_env
 import operator
 import os
+op = os.path
 
-os.putenv("SYMINFO", libtbx.env.under_dist("ccp4io", "lib/data/syminfo.lib"))
+for _ in ["lib/libccp4/data/syminfo.lib",
+          "lib/data/syminfo.lib"]:
+  _ = libtbx.env.under_dist("ccp4io", _)
+  if (op.isfile(_)):
+    os.putenv("SYMINFO", _)
+    break
+else:
+  import warnings
+  warnings.warn("ccp4io_adaptbx: cannot locate syminfo.lib")
 
 def to_mmdb(root, flags = [], remove_duplicates = True):
   "Converts iotbx.pdb.hierarchy object to an MMDB Manager"
