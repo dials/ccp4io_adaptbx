@@ -59,7 +59,6 @@ lib/libccp4/ccp4/cvecmat.h
 lib/libccp4/fortran/fftlib.f
 lib/libccp4/ccp4/library_err.c
 lib/libccp4/fortran/library_f.c
-lib/libccp4/ccp4/library_f.h
 lib/libccp4/ccp4/library_file.c
 lib/libccp4/ccp4/library_file.h
 lib/libccp4/ccp4/library_utils.c
