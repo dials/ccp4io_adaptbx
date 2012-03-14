@@ -15,6 +15,10 @@ else:
 
 probe_file_name=op.join(env_etc.ccp4io_dist, "lib", "src", "ccp4_errno.h")
 if (op.isfile(probe_file_name)):
+  raise RuntimeError("""\
+Old CCP4 directory structure no longer supported.
+Email rwgrosse-kunstleve@lbl.gov if this is a problem.
+""")
   path_lib_src = op.join(env_etc.ccp4io_dist, "lib", "src")
   ccp4_src = "src"
   mmdb_src = "src"
@@ -26,6 +30,11 @@ else:
   mmdb_src = "mmdb"
   env_etc.ccp4io_include = libtbx.env.under_dist(
     module_name="ccp4io", path="lib/libccp4/ccp4")
+  # TODO 2012-03-14: these include paths are no longer needed:
+  # ccp4/lib/libccp4/ccp4
+  # ccp4/lib/mmdb/mmdb
+  # clean out after completely removing support for
+  # old CCP4 directory structure above
 
 build_ccp4io_adaptbx = libtbx.env.under_build("ccp4io_adaptbx")
 if (not op.isdir(build_ccp4io_adaptbx)):
