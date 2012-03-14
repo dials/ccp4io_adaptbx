@@ -58,6 +58,7 @@ env_etc.include_registry.append(
   env=env,
   paths=[
     "#",
+    op.dirname(env_etc.ccp4io_include),
     env_etc.ccp4io_include,
     op.join(env_etc.ccp4io_dist, "lib", mmdb_src),
     op.join(env_etc.ccp4io_dist, "lib", mmdb_src, "mmdb")])
