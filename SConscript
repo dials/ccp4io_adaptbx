@@ -72,6 +72,10 @@ env_etc.include_registry.append(
     op.join(env_etc.ccp4io_dist, "lib", mmdb_src),
     op.join(env_etc.ccp4io_dist, "lib", mmdb_src, "mmdb")])
 env.Append(LIBS=env_etc.libm)
+# XXX 2012-06-16: is this actually necessary here, or just in code that links to
+# ccp4io.lib?
+if (os.name == "nt") :
+  env.Prepend(LIBS=["Advapi32"])
 if (   op.normcase(op.dirname(env_etc.ccp4io_dist))
     != op.normcase("ccp4io")):
   env.Repository(op.dirname(env_etc.ccp4io_dist))
