@@ -9,9 +9,10 @@ Import("env_base", "env_etc")
 env_etc.ccp4io_dist = libtbx.env.dist_path("ccp4io")
 
 if env_etc.compiler == "win32_cl":
-  env_etc.ccp4io_defines = ["/Di386", "/D_MVS"]
+  env_etc.ccp4io_defines = ["/Di386", "/D_MVS", "/DMXTALS=32", "/DMSETS=32",
+    "/DMCOLUMNS=128"]
 else:
-  env_etc.ccp4io_defines = []
+  env_etc.ccp4io_defines = ["-DMSETS=32", "-DMXTALS=32", "-DMCOLUMNS=128"]
 
 probe_file_name=op.join(env_etc.ccp4io_dist, "lib", "src", "ccp4_errno.h")
 if (op.isfile(probe_file_name)):
