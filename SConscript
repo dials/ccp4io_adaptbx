@@ -8,9 +8,15 @@ Import("env_base", "env_etc")
 
 env_etc.ccp4io_dist = libtbx.env.dist_path("ccp4io")
 
+# FIXME
+# Set lower size limits for MTZ file contents; this is a fix for an obscure
+# bug which causes Phenix to crash on MacOS 10.5.  Probably not necessary in
+# all circumstances though.
 if env_etc.compiler == "win32_cl":
+  # XXX for reasons that are unclear to me, defining CALL_LIKE_SUN is necessary
+  # to get the proper function names in ccp4_fortran.h using VC++
   env_etc.ccp4io_defines = ["/Di386", "/D_MVS", "/DMXTALS=32", "/DMSETS=32",
-    "/DMCOLUMNS=128"]
+    "/DMCOLUMNS=128", "/DCALL_LIKE_SUN"]
 else:
   env_etc.ccp4io_defines = ["-DMSETS=32", "-DMXTALS=32", "-DMCOLUMNS=128"]
 
