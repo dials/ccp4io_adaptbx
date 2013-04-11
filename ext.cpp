@@ -4,7 +4,9 @@
 
 namespace ccp4io_adaptbx { namespace boost_python {
 
-class PySSMAlign : public CSSMAlign
+using namespace ssm;
+
+class PySSMAlign : public Align
 {
   public:
     PySSMAlign() {}
@@ -63,7 +65,7 @@ class ResidueData
     ~ResidueData() {}
 };
 
-class PyXAlignText : public CXAlignText
+class PyXAlignText : public XAlignText
 {
   private:
     int length;
@@ -80,7 +82,7 @@ class PyXAlignText : public CXAlignText
       m1->GetSelIndex ( cssm.selHndCa1,Calpha1,nat1 );
       m2->GetSelIndex ( cssm.selHndCa2,Calpha2,nat2 );
 
-      XAlign(
+      XAlign().align(
         cssm.G1, Calpha1, cssm.Ca1, nat1,
         cssm.G2, Calpha2, cssm.Ca2, nat2,
         cssm.dist1, length
@@ -91,7 +93,7 @@ class PyXAlignText : public CXAlignText
     {
       boost::python::list l;
 
-      PSXTAlign XTA = GetTextRows();
+      PXTAlign XTA = GetTextRows();
 
       for( int i = 0; i < length; ++i)
       {
@@ -211,6 +213,7 @@ void
 init_module()
 {
   using namespace boost::python;
+  using namespace ssm;
 
   object package = scope();
   package.attr( "__path__" ) = "ccp4io_adaptbx";
@@ -235,25 +238,57 @@ init_module()
   Manager_wrappers::wrap();
 
   scope ssm_scope = ssm_module;
-  ssm_scope.attr( "C_Flexible" ) = CSSC_Flexible;
-  ssm_scope.attr( "P_Highest" ) = SSMP_Highest;
-  ssm_scope.attr( "P_High" ) = SSMP_High;
-  ssm_scope.attr( "P_Normal" ) = SSMP_Normal ;
-  ssm_scope.attr( "P_Low" ) = SSMP_Low ;
-  ssm_scope.attr( "P_Lowest" ) = SSMP_Lowest ;
-  ssm_scope.attr( "RC_Ok" ) = SSM_Ok;
-  ssm_scope.attr( "RC_noHits" ) = SSM_noHits;
-  ssm_scope.attr( "RC_noSPSN" ) = SSM_noSPSN;
-  ssm_scope.attr( "RC_noGraph" ) = SSM_noGraph;
-  ssm_scope.attr( "RC_noVertices" ) = SSM_noVertices;
-  ssm_scope.attr( "RC_noGraph2" ) = SSM_noGraph2;
-  ssm_scope.attr( "RC_noVertices2" ) = SSM_noVertices2;
 
-  InitSSGraph();
+  enum_<SUPERPOSITION_RESULT>("SUPERPOSITION_RESULT")
+    .value("SPOSE_Ok", SPOSE_Ok)
+    .value("SPOSE_BadData", SPOSE_BadData)
+    .value("SPOSE_NoCalphas1", SPOSE_NoCalphas1)
+    .value("SPOSE_NoCalphas2", SPOSE_NoCalphas2)
+    .value("SPOSE_RemoteStruct", SPOSE_RemoteStruct)
+    .value("SPOSE_SVDFail", SPOSE_SVDFail);
+  enum_<RETURN_CODE>("RETURN_CODE")
+    .value("RC_Ok", RC_Ok)
+    .value("RC_NoHits", RC_NoHits)
+    .value("RC_NoSuperposition", RC_NoSuperposition)
+    .value("RC_NoGraph", RC_NoGraph)
+    .value("RC_NoVertices", RC_NoVertices)
+    .value("RC_NoGraph2", RC_NoGraph2)
+    .value("RC_NoVertices2", RC_NoVertices2)
+    .value("RC_TooFewMatches", RC_TooFewMatches);
+  enum_<PRECISION>("PRECISION")
+    .value("PREC_Highest", PREC_Highest)
+    .value("PREC_High", PREC_High)
+    .value("PREC_Normal", PREC_Normal)
+    .value("PREC_Low", PREC_Low)
+    .value("PREC_Lowest", PREC_Lowest);
+  enum_<CONNECTIVITY>("CONNECTIVITY")
+    .value("CONNECT_Flexible", CONNECT_Flexible)
+    .value("CONNECT_None", CONNECT_None)
+    .value("CONNECT_Strict", CONNECT_Strict);
+  enum_<VERTEX_TYPE>("VERTEX_TYPE")
+    .value("V_UNKNOWN", V_UNKNOWN)
+    .value("V_HELIX", V_HELIX)
+    .value("V_STRAND", V_STRAND);
+
+  ssm_scope.attr( "C_Flexible" ) = CONNECT_Flexible;
+  ssm_scope.attr( "P_Highest" ) = PREC_Highest;
+  ssm_scope.attr( "P_High" ) = PREC_High;
+  ssm_scope.attr( "P_Normal" ) = PREC_Normal ;
+  ssm_scope.attr( "P_Low" ) = PREC_Low ;
+  ssm_scope.attr( "P_Lowest" ) = PREC_Lowest ;
+  ssm_scope.attr( "RC_Ok" ) = RC_Ok;
+  ssm_scope.attr( "RC_noHits" ) = RC_NoHits;
+  ssm_scope.attr( "RC_noSPSN" ) = RC_NoSuperposition;
+  ssm_scope.attr( "RC_noGraph" ) = RC_NoGraph;
+  ssm_scope.attr( "RC_noVertices" ) = RC_NoVertices;
+  ssm_scope.attr( "RC_noGraph2" ) = RC_NoGraph2;
+  ssm_scope.attr( "RC_noVertices2" ) = RC_NoVertices2;
+
+  InitGraph();
   class_< PySSMAlign >( "SSMAlign", init<>() )
     .def(
       "Align",
-      &PySSMAlign::Align,
+      &PySSMAlign::align,
       ( arg( "manager1" ), arg( "manager2" ), arg( "precision" ),
         arg( "connectivity" ), arg( "selHnd1" ), arg( "selHnd2" ) )
       )

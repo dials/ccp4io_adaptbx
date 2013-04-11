@@ -1,3 +1,5 @@
+from __future__ import division
+
 def run(args):
   assert len(args) == 0
   import ccp4io_adaptbx
