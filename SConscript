@@ -162,9 +162,9 @@ for file_name in c_files:
 
 ssm_prefix = "#"+op.join(op.basename(env_etc.ccp4io_dist), "lib", "ssm")
 ssm_sources = """\
-ss_csia.cpp
-ss_graph.cpp
-ss_vxedge.cpp
+ssm_csia.cpp
+ssm_graph.cpp
+ssm_vxedge.cpp
 ssm_align.cpp
 ssm_superpose.cpp
 """.splitlines()

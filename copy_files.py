@@ -133,6 +133,7 @@ lib/mmdb/mmdb/random_n.cpp
 lib/mmdb/mmdb/random_n.h
 lib/mmdb/mmdb/stream_.cpp
 lib/mmdb/mmdb/stream_.h
+lib/ssm/ssm_defs.h
 lib/ssm/ssm_csia.cpp
 lib/ssm/ssm_csia.h
 lib/ssm/ssm_graph.cpp
