@@ -82,7 +82,7 @@ class PyXAlignText : public XAlignText
       m1->GetSelIndex ( cssm.selHndCa1,Calpha1,nat1 );
       m2->GetSelIndex ( cssm.selHndCa2,Calpha2,nat2 );
 
-      XAlign().align(
+      align(
         cssm.G1, Calpha1, cssm.Ca1, nat1,
         cssm.G2, Calpha2, cssm.Ca2, nat2,
         cssm.dist1, length
