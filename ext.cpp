@@ -240,49 +240,35 @@ init_module()
   scope ssm_scope = ssm_module;
 
   enum_<SUPERPOSITION_RESULT>("SUPERPOSITION_RESULT")
-    .value("SPOSE_Ok", SPOSE_Ok)
-    .value("SPOSE_BadData", SPOSE_BadData)
-    .value("SPOSE_NoCalphas1", SPOSE_NoCalphas1)
-    .value("SPOSE_NoCalphas2", SPOSE_NoCalphas2)
-    .value("SPOSE_RemoteStruct", SPOSE_RemoteStruct)
-    .value("SPOSE_SVDFail", SPOSE_SVDFail);
+    .value("Ok", SPOSE_Ok)
+    .value("BadData", SPOSE_BadData)
+    .value("NoCalphas1", SPOSE_NoCalphas1)
+    .value("NoCalphas2", SPOSE_NoCalphas2)
+    .value("RemoteStruct", SPOSE_RemoteStruct)
+    .value("SVDFail", SPOSE_SVDFail);
   enum_<RETURN_CODE>("RETURN_CODE")
-    .value("RC_Ok", RC_Ok)
-    .value("RC_NoHits", RC_NoHits)
-    .value("RC_NoSuperposition", RC_NoSuperposition)
-    .value("RC_NoGraph", RC_NoGraph)
-    .value("RC_NoVertices", RC_NoVertices)
-    .value("RC_NoGraph2", RC_NoGraph2)
-    .value("RC_NoVertices2", RC_NoVertices2)
-    .value("RC_TooFewMatches", RC_TooFewMatches);
+    .value("Ok", RC_Ok)
+    .value("NoHits", RC_NoHits)
+    .value("NoSuperposition", RC_NoSuperposition)
+    .value("NoGraph", RC_NoGraph)
+    .value("NoVertices", RC_NoVertices)
+    .value("NoGraph2", RC_NoGraph2)
+    .value("NoVertices2", RC_NoVertices2)
+    .value("TooFewMatches", RC_TooFewMatches);
   enum_<PRECISION>("PRECISION")
-    .value("PREC_Highest", PREC_Highest)
-    .value("PREC_High", PREC_High)
-    .value("PREC_Normal", PREC_Normal)
-    .value("PREC_Low", PREC_Low)
-    .value("PREC_Lowest", PREC_Lowest);
+    .value("Highest", PREC_Highest)
+    .value("High", PREC_High)
+    .value("Normal", PREC_Normal)
+    .value("Low", PREC_Low)
+    .value("Lowest", PREC_Lowest);
   enum_<CONNECTIVITY>("CONNECTIVITY")
-    .value("CONNECT_Flexible", CONNECT_Flexible)
-    .value("CONNECT_None", CONNECT_None)
-    .value("CONNECT_Strict", CONNECT_Strict);
+    .value("Flexible", CONNECT_Flexible)
+    .value("None_", CONNECT_None)
+    .value("Strict", CONNECT_Strict);
   enum_<VERTEX_TYPE>("VERTEX_TYPE")
-    .value("V_UNKNOWN", V_UNKNOWN)
-    .value("V_HELIX", V_HELIX)
-    .value("V_STRAND", V_STRAND);
-
-  ssm_scope.attr( "C_Flexible" ) = CONNECT_Flexible;
-  ssm_scope.attr( "P_Highest" ) = PREC_Highest;
-  ssm_scope.attr( "P_High" ) = PREC_High;
-  ssm_scope.attr( "P_Normal" ) = PREC_Normal ;
-  ssm_scope.attr( "P_Low" ) = PREC_Low ;
-  ssm_scope.attr( "P_Lowest" ) = PREC_Lowest ;
-  ssm_scope.attr( "RC_Ok" ) = RC_Ok;
-  ssm_scope.attr( "RC_noHits" ) = RC_NoHits;
-  ssm_scope.attr( "RC_noSPSN" ) = RC_NoSuperposition;
-  ssm_scope.attr( "RC_noGraph" ) = RC_NoGraph;
-  ssm_scope.attr( "RC_noVertices" ) = RC_NoVertices;
-  ssm_scope.attr( "RC_noGraph2" ) = RC_NoGraph2;
-  ssm_scope.attr( "RC_noVertices2" ) = RC_NoVertices2;
+    .value("UNKNOWN", V_UNKNOWN)
+    .value("HELIX", V_HELIX)
+    .value("STRAND", V_STRAND);
 
   InitGraph();
   class_< PySSMAlign >( "SSMAlign", init<>() )

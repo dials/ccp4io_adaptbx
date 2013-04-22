@@ -53,12 +53,12 @@ def select_atoms_with_same_resname(rg):
 
 
 ssm.ERROR_DESCRIPTION_FOR = {
-  ssm.RC_noHits: "secondary structure does not match",
-  ssm.RC_noSPSN: "structures are too remote",
-  ssm.RC_noGraph: "can't make graph for first structure",
-  ssm.RC_noVertices: "empty graph for first structure",
-  ssm.RC_noGraph2: "can't make graph for second structure",
-  ssm.RC_noVertices2: "empty graph for second structure",
+  ssm.RETURN_CODE.NoHits: "secondary structure does not match",
+  ssm.RETURN_CODE.NoSuperposition: "structures are too remote",
+  ssm.RETURN_CODE.NoGraph: "can't make graph for first structure",
+  ssm.RETURN_CODE.NoVertices: "empty graph for first structure",
+  ssm.RETURN_CODE.NoGraph2: "can't make graph for second structure",
+  ssm.RETURN_CODE.NoVertices2: "empty graph for second structure",
   }
 
 ssm.GetErrorDescription = lambda rc: (
@@ -72,8 +72,8 @@ class SecondaryStructureMatching(object):
     self,
     moving,
     reference,
-    precision = ssm.P_Normal,
-    connectivity = ssm.C_Flexible
+    precision = ssm.PRECISION.Normal,
+    connectivity = ssm.CONNECTIVITY.Flexible
     ):
 
     self.chains = []
@@ -112,7 +112,7 @@ class SecondaryStructureMatching(object):
       selHnd1 = self.handles[0],
       selHnd2 = self.handles[1],
       )
-    if rc != ssm.RC_Ok:
+    if rc != ssm.RETURN_CODE.Ok:
       raise RuntimeError, ssm.GetErrorDescription( rc = rc )
 
 
@@ -128,13 +128,13 @@ class SecondaryStructureMatching(object):
     rc = self.ssm.AlignSelectedMatch(
       manager1 = self.managers[0],
       manager2 = self.managers[1],
-      precision = ssm.P_Normal,
-      connectivity = ssm.C_Flexible,
+      precision = ssm.PRECISION.Normal,
+      connectivity = ssm.CONNECTIVITY.Flexible,
       selHnd1 = self.handles[0],
       selHnd2 = self.handles[1],
       nselected = nselected
       )
-    if rc != ssm.RC_Ok:
+    if rc != ssm.RETURN_CODE.Ok:
       raise RuntimeError, ssm.GetErrorDescription( rc = rc )
 
 
