@@ -79,6 +79,7 @@ class SecondaryStructureMatching(object):
     self.chains = []
     self.managers = []
     self.handles = []
+    self.qvalues = []
 
     for chain in [ moving, reference ]:
       manager = to_mmdb( root = chain )
@@ -115,13 +116,15 @@ class SecondaryStructureMatching(object):
     if rc != ssm.RETURN_CODE.Ok:
       raise RuntimeError, ssm.GetErrorDescription( rc = rc )
 
+    self.qvalues = self.ssm.GetQvalues()
+
 
   def GetQvalues(self):
-      return self.ssm.GetQvalues()
+      return self.qvalues
 
 
   def AlignSelectedMatch(self, nselected):
-    if nselected >= len(self.ssm.GetQvalues()):
+    if nselected >= len(self.qvalues):
         print "Not that many matches available"
         return
 
