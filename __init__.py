@@ -119,6 +119,7 @@ class SecondaryStructureMatching(object):
     self.qvalues = self.ssm.GetQvalues()
 
 
+
   def GetQvalues(self):
       return self.qvalues
 
@@ -141,9 +142,10 @@ class SecondaryStructureMatching(object):
       raise RuntimeError, ssm.GetErrorDescription( rc = rc )
 
 
-  def get_matrix(self):
 
+  def get_matrix(self):
     return self.ssm.t_matrix
+
 
 
 class SSMAlignment(object):
@@ -173,6 +175,34 @@ class SSMAlignment(object):
 
       self.pairs.append( ( get( f, indexer1 ), get( s, indexer2 ) ) )
       self.stats.append( a )
+
+
+
+  def GetSSMSequenceIdentity(self):
+    gaplessalignlen = 0
+    s5 = 0.0; s4 = 0.0; s3 = 0.0; s2 = 0.0; s1 = 0.0; s0 = 0.0
+    for e in self.stats:
+        if len(e) > 0:
+            gaplessalignlen += 1
+            """ count number of similar residues in alignment according to score
+             **    identical residues matched: similarity 5
+             ++    similarity 4
+             ==    similarity 3
+             --    similarity 2
+             ::    similarity 1
+             ..    dissimilar residues: similarity 0
+            """
+            if e[2] <= 0: s0 += 1.0
+            if e[2] == 1: s1 += 1.0
+            if e[2] == 2: s2 += 1.0
+            if e[2] == 3: s3 += 1.0
+            if e[2] == 4: s4 += 1.0
+            if e[2] == 5: s5 += 1.0
+
+    glen = gaplessalignlen/100.0
+    #       identical sim4      sim3    sim2     sim1    dissimilar
+    return (s5/glen, s4/glen, s3/glen, s2/glen, s1/glen, s0/glen, gaplessalignlen)
+
 
 
   def residue_groups(cls, match):
