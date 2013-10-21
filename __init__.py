@@ -8,7 +8,7 @@ import operator
 import os
 op = os.path
 
-for _ in ["lib/libccp4/data/syminfo.lib",
+for _ in ["libccp4/data/syminfo.lib",
           "lib/data/syminfo.lib"]:
   _ = libtbx.env.under_dist("ccp4io", _)
   if (op.isfile(_)):
@@ -86,9 +86,9 @@ class SecondaryStructureMatching(object):
       handle = manager.NewSelection()
       manager.Select(
         selHnd = handle,
-        selType = mmdb.STYPE_ATOM,
+        selType = mmdb.SELECTION_TYPE.ATOM,
         cid = "*",
-        selKey = mmdb.SKEY_NEW
+        selKey = mmdb.SELECTION_KEY.NEW
         )
 
       if manager.GetSelLength( selHnd = handle ) <= 0:

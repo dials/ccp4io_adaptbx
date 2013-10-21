@@ -20,28 +20,10 @@ if env_etc.compiler == "win32_cl":
 else:
   env_etc.ccp4io_defines = ["-DMSETS=32", "-DMXTALS=32", "-DMCOLUMNS=128"]
 
-probe_file_name=op.join(env_etc.ccp4io_dist, "lib", "src", "ccp4_errno.h")
-if (op.isfile(probe_file_name)):
-  raise RuntimeError("""\
-Old CCP4 directory structure no longer supported.
-Email rwgrosse-kunstleve@lbl.gov if this is a problem.
-""")
-  path_lib_src = op.join(env_etc.ccp4io_dist, "lib", "src")
-  ccp4_src = "src"
-  mmdb_src = "src"
-  env_etc.ccp4io_include = libtbx.env.under_dist(
-    module_name="ccp4io", path="lib/src")
-else:
-  path_lib_src = op.join(env_etc.ccp4io_dist, "lib", "libccp4", "ccp4")
-  ccp4_src = op.join("libccp4", "ccp4")
-  mmdb_src = "mmdb"
-  env_etc.ccp4io_include = libtbx.env.under_dist(
-    module_name="ccp4io", path="lib/libccp4/ccp4")
-  # TODO 2012-03-14: these include paths are no longer needed:
-  # ccp4/lib/libccp4/ccp4
-  # ccp4/lib/mmdb/mmdb
-  # clean out after completely removing support for
-  # old CCP4 directory structure above
+path_lib_src = op.join(env_etc.ccp4io_dist, "libccp4", "ccp4")
+ccp4_src = op.join("libccp4", "ccp4")
+env_etc.ccp4io_include = libtbx.env.under_dist(
+  module_name="ccp4io", path="libccp4/ccp4")
 
 build_ccp4io_adaptbx = libtbx.env.under_build("ccp4io_adaptbx")
 if (not op.isdir(build_ccp4io_adaptbx)):
@@ -76,8 +58,7 @@ env_etc.include_registry.append(
     "#",
     op.dirname(env_etc.ccp4io_include),
     env_etc.ccp4io_include,
-    op.join(env_etc.ccp4io_dist, "lib", mmdb_src),
-    op.join(env_etc.ccp4io_dist, "lib", mmdb_src, "mmdb")])
+    op.join(env_etc.ccp4io_dist)])
 env.Append(LIBS=env_etc.libm)
 # XXX 2012-06-16: is this actually necessary here, or just in code that links to
 # ccp4io.lib?
@@ -121,15 +102,8 @@ cmap_stats.c
 cmap_symop.c
 """.splitlines()])
 
-c_files.extend(["%s/mmdb/%s.cpp" % ( mmdb_src, bn ) for bn in """\
-bfgs_min
-file_
+c_files.extend(["%s/%s.cpp" % ( "mmdb", bn ) for bn in """\
 hybrid_36
-linalg_
-machine_
-math_
-mattype_
-mmdb_align
 mmdb_atom
 mmdb_bondmngr
 mmdb_chain
@@ -137,30 +111,37 @@ mmdb_cifdefs
 mmdb_coormngr
 mmdb_cryst
 mmdb_ficif
-mmdb_file
-mmdb_graph
+mmdb_io_file
+mmdb_io_stream
+mmdb_machine_
 mmdb_manager
 mmdb_mask
-mmdb_mmcif
+mmdb_math_align
+mmdb_math_bfgsmin
+mmdb_math_
+mmdb_math_fft
+mmdb_math_graph
+mmdb_math_linalg
+mmdb_math_rand
+mmdb_mattype
+mmdb_mmcif_
 mmdb_model
+mmdb_root
 mmdb_rwbrook
-mmdb_sbase
-mmdb_sbase0
 mmdb_selmngr
+mmdb_seqsuperpose
 mmdb_symop
 mmdb_tables
 mmdb_title
 mmdb_uddata
 mmdb_utils
-mmdb_xml
-random_n
-stream_
+mmdb_xml_
 """.splitlines()])
-prefix = "#"+op.join(op.basename(env_etc.ccp4io_dist), "lib")
+prefix = "#"+op.join(op.basename(env_etc.ccp4io_dist), "")
 for file_name in c_files:
   source.append(op.join(prefix, file_name))
 
-ssm_prefix = "#"+op.join(op.basename(env_etc.ccp4io_dist), "lib", "ssm")
+ssm_prefix = "#"+op.join(op.basename(env_etc.ccp4io_dist), "ssm")
 ssm_sources = """\
 ssm_csia.cpp
 ssm_graph.cpp
@@ -205,9 +186,7 @@ if (    libtbx.env.has_module("boost")
   env_etc.include_registry.append(
     env = env_ext,
     paths = [
-      os.path.join( env_etc.ccp4io_dist, "lib", mmdb_src ),
-      os.path.join( env_etc.ccp4io_dist, "lib", mmdb_src, "mmdb" ),
-      os.path.join( env_etc.ccp4io_dist, "lib", "ssm"),
+      os.path.join( env_etc.ccp4io_dist),
       env_etc.boost_include,
       env_etc.python_include,
       ]

@@ -1,10 +1,11 @@
 #include <boost/python.hpp>
-#include <mmdb_manager.h>
-#include <ssm_align.h>
+#include <mmdb/mmdb_manager.h>
+#include <ssm/ssm_align.h>
 
 namespace ccp4io_adaptbx { namespace boost_python {
 
 using namespace ssm;
+using namespace mmdb;
 
 class PySSMAlign : public Align
 {
@@ -74,9 +75,9 @@ class PyXAlignText : public XAlignText
     PyXAlignText() : length( 0 ) {}
     ~PyXAlignText() {}
 
-    void py_x_align(PCMMDBManager m1, PCMMDBManager m2, PySSMAlign& cssm)
+    void py_x_align(PManager m1, PManager m2, PySSMAlign& cssm)
     {
-      PPCAtom Calpha1,Calpha2;
+      PPAtom Calpha1,Calpha2;
       int nat1,nat2,nr;
 
       m1->GetSelIndex ( cssm.selHndCa1,Calpha1,nat1 );
@@ -171,7 +172,7 @@ class PyXAlignText : public XAlignText
 
 struct Manager_wrappers
 {
-  typedef CMMDBManager wt;
+  typedef Manager wt;
 
   static
   boost::python::object
@@ -191,15 +192,17 @@ struct Manager_wrappers
     class_<wt>( "Manager", init<>() )
       .def( "SetFlag", &wt::SetFlag, ( arg( "flag" ) ) )
       .def("ReadPDBASCII",
-        (int (wt::*)(cpstr, byte)) &wt::ReadPDBASCII, (
+        (ERROR_CODE (wt::*)(cpstr, io::GZ_MODE)) &wt::ReadPDBASCII, (
           arg( "fileName" ), arg( "gzipMode" )))
-      .def( "PutPDBString", &wt::PutPDBString, ( arg( "pdbString" ) ) )
+      .def( "PutPDBString",
+        (ERROR_CODE (wt::*)(cpstr)) &wt::PutPDBString,
+         ( arg( "pdbString" )))
       .def( "WritePDBASCII",
-        (int (wt::*)(cpstr, byte)) &wt::WritePDBASCII, (
+        (ERROR_CODE (wt::*)(cpstr, io::GZ_MODE)) &wt::WritePDBASCII, (
           arg( "fileName" ), arg( "gzipMode" )))
       .def( "NewSelection", &wt::NewSelection )
       .def("Select",
-        (int (wt::*)(int, int, cpstr, int)) &wt::Select, (
+        (int (wt::*)(int, SELECTION_TYPE, cpstr, SELECTION_KEY)) &wt::Select, (
           arg( "selHnd" ), arg( "selType" ), arg( "cid" ), arg( "selKey")))
       .def( "GetSelLength", &wt::GetSelLength, ( arg( "selHnd" ) ) )
       .def( "isSpaceGroup", &wt::isSpaceGroup )
@@ -213,7 +216,6 @@ void
 init_module()
 {
   using namespace boost::python;
-  using namespace ssm;
 
   object package = scope();
   package.attr( "__path__" ) = "ccp4io_adaptbx";
@@ -227,11 +229,28 @@ init_module()
   scope().attr( "mmdb" ) = mmdb_module;
   scope().attr( "ssm" ) = ssm_module;
   scope mmdb_scope = mmdb_module;
-  mmdb_scope.attr( "F_PrintCIFWarnings" ) = MMDBF_PrintCIFWarnings;
-  mmdb_scope.attr( "F_IgnoreNonCoorPDBErrors" ) = MMDBF_IgnoreNonCoorPDBErrors;
-  mmdb_scope.attr( "F_IgnoreDuplSeqNum" ) = MMDBF_IgnoreDuplSeqNum;
-  mmdb_scope.attr( "STYPE_ATOM" ) = STYPE_ATOM;
-  mmdb_scope.attr( "SKEY_NEW" ) = SKEY_NEW;
+  enum_<SELECTION_TYPE>("SELECTION_TYPE")
+    .value("INVALID", STYPE_INVALID)
+    .value("UNDEFINED", STYPE_UNDEFINED)
+    .value("ATOM", STYPE_ATOM)
+    .value("RESIDUE", STYPE_RESIDUE)
+    .value("CHAIN", STYPE_CHAIN)
+    .value("MODEL", STYPE_MODEL);
+  enum_<SELECTION_KEY>("SELECTION_KEY")
+    .value("NEW", SKEY_NEW)
+    .value("OR", SKEY_OR)
+    .value("AND", SKEY_AND)
+    .value("XOR", SKEY_XOR)
+    .value("CLR", SKEY_CLR)
+    .value("XAND", SKEY_XAND);
+  enum_<ERROR_CODE>("ERROR_CODE")
+    .value("EmptyCIF",Error_EmptyCIF)
+    .value("NoError",Error_NoError)
+    .value("Ok",Error_Ok);
+  enum_<MMDB_READ_FLAG>("MMDB_READ_FLAG")
+    .value("PrintCIFWarnings", MMDBF_PrintCIFWarnings )
+    .value("IgnoreDuplSeqNum", MMDBF_IgnoreDuplSeqNum)
+    .value("IgnoreNonCoorPDBErrors", MMDBF_IgnoreNonCoorPDBErrors);
   def( "GetErrorDescription", &GetErrorDescription );
 
   InitMatType();
