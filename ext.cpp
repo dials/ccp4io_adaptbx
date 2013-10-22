@@ -251,6 +251,20 @@ init_module()
     .value("PrintCIFWarnings", MMDBF_PrintCIFWarnings )
     .value("IgnoreDuplSeqNum", MMDBF_IgnoreDuplSeqNum)
     .value("IgnoreNonCoorPDBErrors", MMDBF_IgnoreNonCoorPDBErrors);
+  enum_<io::GZ_MODE>("IO_GZ_MODE")
+    .value("GZM_NONE", io::GZM_NONE)
+    .value("GZM_CHECK", io::GZM_CHECK)
+    .value("GZM_ENFORCE", io::GZM_ENFORCE)
+    .value("GZM_ENFORCE_GZIP", io::GZM_ENFORCE_GZIP)
+    .value("GZM_ENFORCE_COMPRESS", io::GZM_ENFORCE_COMPRESS);
+  enum_<io::FILE_ERROR>("IO_FILE_ERROR")
+    .value("FileError_NoMemory", io::FileError_NoMemory)
+    .value("FileError_ShortData", io::FileError_ShortData)
+    .value("FileError_NoDataFound", io::FileError_NoDataFound)
+    .value("FileError_NoColumn", io::FileError_NoColumn)
+    .value("FileError_BadData", io::FileError_BadData)
+    .value("FileError_WrongMemoryAllocation",
+      io::FileError_WrongMemoryAllocation);
   def( "GetErrorDescription", &GetErrorDescription );
 
   InitMatType();
