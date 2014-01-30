@@ -14,9 +14,14 @@ for _ in ["libccp4/data/syminfo.lib",
   if (op.isfile(_)):
     os.putenv("SYMINFO", _)
     break
+
 else:
-  import warnings
-  warnings.warn("ccp4io_adaptbx: cannot locate syminfo.lib")
+  if os.getenv( "CLIBD" ) and op.isfile( op.join( os.getenv( "CLIBD" ), "syminfo.lib" ) ):
+    os.putenv( "SYMINFO", op.join( os.getenv( "CLIBD" ), "syminfo.lib" ) )
+
+  else:
+    import warnings
+    warnings.warn("ccp4io_adaptbx: cannot locate syminfo.lib")
 
 def to_mmdb(root, flags = [], remove_duplicates = True):
   "Converts iotbx.pdb.hierarchy object to an MMDB Manager"
