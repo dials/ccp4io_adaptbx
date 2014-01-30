@@ -12,12 +12,12 @@ for _ in ["libccp4/data/syminfo.lib",
           "lib/data/syminfo.lib"]:
   _ = libtbx.env.under_dist("ccp4io", _)
   if (op.isfile(_)):
-    os.putenv("SYMINFO", _)
+    os.environ["SYMINFO"] = _
     break
 
 else:
   if os.getenv( "CLIBD" ) and op.isfile( op.join( os.getenv( "CLIBD" ), "syminfo.lib" ) ):
-    os.putenv( "SYMINFO", op.join( os.getenv( "CLIBD" ), "syminfo.lib" ) )
+    os.environ["SYMINFO"] = op.join( os.getenv( "CLIBD" ), "syminfo.lib" )
 
   else:
     import warnings
