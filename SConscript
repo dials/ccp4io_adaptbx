@@ -148,6 +148,7 @@ ssm_graph.cpp
 ssm_vxedge.cpp
 ssm_align.cpp
 ssm_superpose.cpp
+ssm_malign.cpp
 """.splitlines()
 source.extend( [ op.join( ssm_prefix, f ) for f in ssm_sources ] )
 

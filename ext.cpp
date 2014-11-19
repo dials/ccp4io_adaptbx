@@ -1,6 +1,14 @@
 #include <boost/python.hpp>
+#include <boost/python/object.hpp>
+#include <boost/python/extract.hpp>
+#include <boost/python/list.hpp>
+
+#include <boost/scoped_ptr.hpp>
+#include <boost/scoped_array.hpp>
+
 #include <mmdb/mmdb_manager.h>
 #include <ssm/ssm_align.h>
+#include <ssm/ssm_malign.h>
 
 namespace ccp4io_adaptbx { namespace boost_python {
 
@@ -168,7 +176,207 @@ class PyXAlignText : public XAlignText
     }
 };
 
+struct MultAlignResidueData
+{
+  public:
+    bool aligned;
+    boost::python::str chain_id, resname, inscode;
+    int sse_type, resseq;
 
+    MultAlignResidueData(
+      const ChainID& chain_id_,
+      const ResName& resname_,
+      const InsCode& inscode_,
+      int sse_type_,
+      int resseq_,
+      bool aligned_
+      )
+      : chain_id( chain_id_[0] == '\0' ? "" : boost::python::str( chain_id_, 1 ) ),
+        resname( resname_[0] == '\0' ? "" : boost::python::str( resname_, 3 ) ),
+        inscode( inscode_[0] == '\0' ? "" : boost::python::str( inscode_, 1 ) ),
+        sse_type( sse_type_ ),
+        resseq( resseq_ ),
+        aligned( aligned_ )
+    {}
+
+    ~MultAlignResidueData() {}
+};
+
+class MultipleAlignment
+{
+public:
+  typedef boost::scoped_ptr< Graph > graph_ptr_type;
+
+private:
+  int rc_;
+  boost::python::list result_;
+  boost::python::list matrices_;
+
+  int n_align_;
+  int n_sses_;
+  mmdb::realtype rmsd_;
+  mmdb::realtype q_score_;
+
+public:
+  MultipleAlignment(
+    boost::python::object managers,
+    boost::python::object selstrings
+    )
+    : rc_( MALIGN_NoAlignment ), n_align_( 0 ), n_sses_( 0 ), rmsd_( 0 ),
+      q_score_( 0 )
+  {
+    using namespace boost::python;
+    using namespace boost;
+
+    std::size_t size = extract< std::size_t >( managers.attr( "__len__" )() );
+    assert ( size == extract< std::size_t >( selstrings.attr( "__len__" )() ) );
+
+    scoped_array< PManager > p_managers( new PManager[ size ] );
+    scoped_array< int > p_handles( new int[ size ] );
+    scoped_array< pstr > p_strs( new pstr[ size ] );
+    scoped_array< graph_ptr_type > p_graphs( new graph_ptr_type[ size ] );
+    scoped_array< PGraph > p_raw_pgraphs( new PGraph[ size ] );
+
+    for ( std::size_t i = 0; i < size; ++i )
+    {
+      p_managers[ i ] = extract< Manager* >( managers[ i ] );
+      p_strs[ i ] = extract< char* >( selstrings[ i ] );
+
+      p_handles[ i ] = p_managers[ i ]->NewSelection();
+      p_managers[ i ]->Select( p_handles[ i ], STYPE_ATOM, p_strs[ i ], SKEY_NEW );
+    }
+
+    rc_ = MALIGN_Ok;
+
+    for ( std::size_t i = 0; i < size; ++i )
+    {
+      graph_ptr_type graph_ptr( GetSSGraph( p_managers[ i ], p_handles[ i ], rc_ ) );
+
+      if ( rc_ != MALIGN_Ok )
+      {
+        break;
+      }
+
+      p_graphs[ i ].swap( graph_ptr );
+      p_raw_pgraphs[ i ] = p_graphs[ i ].get();
+    }
+
+    MultAlign malign;
+
+    if ( rc_ == MALIGN_Ok )
+    {
+      rc_ = malign.align( p_managers.get(), p_strs.get(), p_raw_pgraphs.get(), size );
+    }
+
+    if ( rc_ == MALIGN_Ok )
+    {
+      get_ma_output( malign );
+      get_ss_output( malign, size );
+      get_scores( malign );
+    }
+
+    for ( std::size_t i = 0; i < size; ++i )
+    {
+      p_managers[ i ]->DeleteSelection( p_handles[ i ] );
+    }
+  }
+
+  ~MultipleAlignment()
+  {}
+
+public:
+  int get_return_code() const
+  {
+    return rc_;
+  }
+
+  boost::python::list get_alignment() const
+  {
+    return result_;
+  }
+
+  boost::python::list get_matrices() const
+  {
+    return matrices_;
+  }
+
+  int get_n_align() const
+  {
+    return n_align_;
+  }
+
+  int get_n_sses() const
+  {
+    return n_sses_;
+  }
+
+  mmdb::realtype get_rmsd() const
+  {
+    return rmsd_;
+  }
+
+  mmdb::realtype get_q_score() const
+  {
+    return q_score_;
+  }
+
+private:
+  void get_ma_output(MultAlign& malign)
+  {
+    PPMAOutput MAOut = NULL;
+    int nrows = 0;
+    int ncols = 0;
+
+    malign.GetMAOutput ( MAOut, nrows, ncols );
+
+    for ( int i = 0; i < nrows; ++i )
+    {
+      boost::python::list row;
+
+      for ( int j = 0; j < ncols; ++j )
+      {
+        MAOutput const& ma = MAOut[i][j];
+
+        row.append(
+          MultAlignResidueData(
+            ma.chID,
+            ma.name,
+            ma.insCode,
+            ma.sseType,
+            ma.seqNum,
+            ma.aligned
+            )
+          );
+      }
+
+      result_.append( row );
+    }
+
+    FreeMSOutput ( MAOut, nrows );
+  }
+
+  void get_ss_output(MultAlign& malign, int size)
+  {
+    mmdb::mat44 T;
+
+    for ( int i=0; i< size; ++i )
+    {
+      malign.getTMatrix( T, i );
+      matrices_.append(
+        boost::python::make_tuple(
+          T[0][0],T[0][1],T[0][2],T[0][3],
+          T[1][0],T[1][1],T[1][2],T[1][3],
+          T[2][0],T[2][1],T[2][2],T[2][3]
+          )
+        );
+    }
+  }
+
+  void get_scores(MultAlign& malign)
+  {
+    malign.getAlignScores( n_align_, n_sses_, rmsd_, q_score_ );
+  }
+};
 
 struct Manager_wrappers
 {
@@ -252,19 +460,18 @@ init_module()
     .value("IgnoreDuplSeqNum", MMDBF_IgnoreDuplSeqNum)
     .value("IgnoreNonCoorPDBErrors", MMDBF_IgnoreNonCoorPDBErrors);
   enum_<io::GZ_MODE>("IO_GZ_MODE")
-    .value("GZM_NONE", io::GZM_NONE)
-    .value("GZM_CHECK", io::GZM_CHECK)
-    .value("GZM_ENFORCE", io::GZM_ENFORCE)
-    .value("GZM_ENFORCE_GZIP", io::GZM_ENFORCE_GZIP)
-    .value("GZM_ENFORCE_COMPRESS", io::GZM_ENFORCE_COMPRESS);
+    .value("NONE", io::GZM_NONE)
+    .value("CHECK", io::GZM_CHECK)
+    .value("ENFORCE", io::GZM_ENFORCE)
+    .value("ENFORCE_GZIP", io::GZM_ENFORCE_GZIP)
+    .value("ENFORCE_COMPRESS", io::GZM_ENFORCE_COMPRESS);
   enum_<io::FILE_ERROR>("IO_FILE_ERROR")
-    .value("FileError_NoMemory", io::FileError_NoMemory)
-    .value("FileError_ShortData", io::FileError_ShortData)
-    .value("FileError_NoDataFound", io::FileError_NoDataFound)
-    .value("FileError_NoColumn", io::FileError_NoColumn)
-    .value("FileError_BadData", io::FileError_BadData)
-    .value("FileError_WrongMemoryAllocation",
-      io::FileError_WrongMemoryAllocation);
+    .value("NoMemory", io::FileError_NoMemory)
+    .value("ShortData", io::FileError_ShortData)
+    .value("_NoDataFound", io::FileError_NoDataFound)
+    .value("NoColumn", io::FileError_NoColumn)
+    .value("BadData", io::FileError_BadData)
+    .value("WrongMemoryAllocation", io::FileError_WrongMemoryAllocation);
   def( "GetErrorDescription", &GetErrorDescription );
 
   InitMatType();
@@ -302,6 +509,12 @@ init_module()
     .value("UNKNOWN", V_UNKNOWN)
     .value("HELIX", V_HELIX)
     .value("STRAND", V_STRAND);
+  enum_<MALIGN_RC>("MALIGN")
+    .value("Ok", MALIGN_Ok)
+    .value("BadInput", MALIGN_BadInput)
+    .value("NoStructure", MALIGN_NoStructure)
+    .value("NoAlignment", MALIGN_NoAlignment)
+    .value("NoGraph", MALIGN_NoGraph);
 
   InitGraph();
   class_< PySSMAlign >( "SSMAlign", init<>() )
@@ -337,6 +550,26 @@ init_module()
       ( arg( "manager1" ), arg( "manager2" ), arg( "ssm_align" ) )
       )
     .def( "get_blocks", &PyXAlignText::get_blocks )
+    ;
+
+  class_< MultAlignResidueData >( "MultAlignResidueData", no_init )
+    .def_readonly( "chain_id", &MultAlignResidueData::chain_id )
+    .def_readonly( "resname", &MultAlignResidueData::resname )
+    .def_readonly( "inscode", &MultAlignResidueData::inscode )
+    .def_readonly( "sse_type", &MultAlignResidueData::sse_type )
+    .def_readonly( "resseq", &MultAlignResidueData::resseq )
+    .def_readonly( "aligned", &MultAlignResidueData::aligned )
+    ;
+
+  class_< MultipleAlignment >( "MultipleAlignment", no_init )
+    .def( init< object, object >( ( arg( "managers" ), arg( "selstrings" ) ) ) )
+    .def( "get_return_code", &MultipleAlignment::get_return_code )
+    .def( "get_alignment", &MultipleAlignment::get_alignment )
+    .def( "get_matrices", &MultipleAlignment::get_matrices )
+    .def( "get_n_align", &MultipleAlignment::get_n_align )
+    .def( "get_n_sses", &MultipleAlignment::get_n_sses )
+    .def( "get_rmsd", &MultipleAlignment::get_rmsd )
+    .def( "get_q_score", &MultipleAlignment::get_q_score )
     ;
 }
 

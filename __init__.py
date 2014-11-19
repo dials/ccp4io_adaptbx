@@ -220,3 +220,50 @@ class SSMAlignment(object):
     return cls( match = match, indexer = indexer )
 
   residue_groups = classmethod( residue_groups )
+
+ssm.MALIGN_ERROR_DESCRIPTION_FOR = {
+  ssm.MALIGN.BadInput: "bad input",
+  ssm.MALIGN.NoStructure: "NULL structure",
+  ssm.MALIGN.NoAlignment: "multiple alignment was not achieved",
+  }
+
+ssm.GetMultAlignErrorDescription = lambda rc: (
+  ssm.MALIGN_ERROR_DESCRIPTION_FOR.get( rc, "unknown return code" ) if rc < ssm.MALIGN.NoGraph
+  else "can't make graph for %s" % ( rc - ssm.MALIGN.NoGraph )
+  )
+
+def reformat_ssm_t_matrix(mx):
+  
+  return (
+    ( mx[0], mx[1], mx[2], mx[4], mx[5], mx[6], mx[8], mx[9], mx[10] ),
+    ( mx[3], mx[7], mx[11] ),
+    )
+
+
+class SSMMultipleAlignment(object):
+  """
+  A convenience object to hold the results
+  """
+
+  def __init__(self, managers, selstrings):
+  
+    if len( managers ) != len( selstrings ):
+      raise ValueError, "Iterables are not the same length"
+    
+    multalign = ssm.MultipleAlignment( managers = managers, selstrings = selstrings )
+    
+    if multalign.get_return_code() != ssm.MALIGN.Ok:
+      raise RuntimeError, ssm.GetMultAlignErrorDescription(
+        rc = multalign.get_return_code(),
+        )
+    
+    self.alignment = multalign.get_alignment()
+    self.t_matrices = multalign.get_matrices()
+    self.rmsd = multalign.get_rmsd()
+    
+    
+  @property
+  def rt_matrices(self):
+    
+    return [ reformat_ssm_t_matrix( mx = mx ) for mx in self.t_matrices ]
+ 
