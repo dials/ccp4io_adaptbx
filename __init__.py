@@ -168,6 +168,7 @@ class SSMAlignment(object):
     indexer2 = indexer( chain = match.chains[1] )
     self.pairs = []
     self.stats = []
+    self.stats2 = []
 
     for ( ( f, s ), a ) in align.get_blocks():
       def get(rgi, indexer):
@@ -179,7 +180,9 @@ class SSMAlignment(object):
         return indexer[ identifier ]
 
       self.pairs.append( ( get( f, indexer1 ), get( s, indexer2 ) ) )
+      self.stats2.append( (f, s) ) # also contains hydropathy, resname, restype
       self.stats.append( a )
+      #import code, traceback; code.interact(local=locals(), banner="".join( traceback.format_stack(limit=10) ) )
 
 
 
@@ -190,12 +193,14 @@ class SSMAlignment(object):
         if len(e) > 0:
             gaplessalignlen += 1
             """ count number of similar residues in alignment according to score
-             **    identical residues matched: similarity 5
-             ++    similarity 4
-             ==    similarity 3
-             --    similarity 2
-             ::    similarity 1
-             ..    dissimilar residues: similarity 0
+              S/H   residue belongs to a strand/helix
+              +/-/. hydrophylic/hydrophobic/neutral residue
+              **    identical residues matched: similarity 5
+              ++    similarity 4
+              ==    similarity 3
+              --    similarity 2
+              ::    similarity 1
+              ..    dissimilar residues: similarity 0
             """
             if e[2] <= 0: s0 += 1.0
             if e[2] == 1: s1 += 1.0
@@ -233,7 +238,7 @@ ssm.GetMultAlignErrorDescription = lambda rc: (
   )
 
 def reformat_ssm_t_matrix(mx):
-  
+
   return (
     ( mx[0], mx[1], mx[2], mx[4], mx[5], mx[6], mx[8], mx[9], mx[10] ),
     ( mx[3], mx[7], mx[11] ),
@@ -246,24 +251,24 @@ class SSMMultipleAlignment(object):
   """
 
   def __init__(self, managers, selstrings):
-  
+
     if len( managers ) != len( selstrings ):
       raise ValueError, "Iterables are not the same length"
-    
+
     multalign = ssm.MultipleAlignment( managers = managers, selstrings = selstrings )
-    
+
     if multalign.get_return_code() != ssm.MALIGN.Ok:
       raise RuntimeError, ssm.GetMultAlignErrorDescription(
         rc = multalign.get_return_code(),
         )
-    
+
     self.alignment = multalign.get_alignment()
     self.t_matrices = multalign.get_matrices()
     self.rmsd = multalign.get_rmsd()
-    
-    
+
+
   @property
   def rt_matrices(self):
-    
+
     return [ reformat_ssm_t_matrix( mx = mx ) for mx in self.t_matrices ]
- 
+
