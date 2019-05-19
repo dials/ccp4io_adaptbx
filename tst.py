@@ -1,4 +1,5 @@
 from __future__ import division
+from __future__ import print_function
 import os
 import ccp4io_adaptbx
 
@@ -7,7 +8,7 @@ def run(args):
   ccp4io_adaptbx.mmdb.Manager()
   ccp4io_adaptbx.ssm.XAlignText()
   tst_ssm()
-  print "OK"
+  print("OK")
 
 def tst_ssm():
   import libtbx.load_env
@@ -17,13 +18,13 @@ def tst_ssm():
     relative_path="phenix_regression/pdb/ssm1.pdb",
     test=os.path.isfile)
   if (ssm_pdb1 is None):
-    print "Skipping exercise_regression(): input pdb (ssm1.pdb) not available"
+    print("Skipping exercise_regression(): input pdb (ssm1.pdb) not available")
     return
   ssm_pdb2 = libtbx.env.find_in_repositories(
     relative_path="phenix_regression/pdb/ssm2.pdb",
     test=os.path.isfile)
   if (ssm_pdb2 is None):
-    print "Skipping exercise_regression(): input pdb (ssm2.pdb) not available"
+    print("Skipping exercise_regression(): input pdb (ssm2.pdb) not available")
     return
   pdb_io1 = pdb.input(file_name=ssm_pdb1)
   pdb_hierarchy1 = pdb_io1.construct_hierarchy()

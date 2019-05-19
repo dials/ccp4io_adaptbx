@@ -1,4 +1,5 @@
 from __future__ import division
+from __future__ import print_function
 import sys, os
 op = os.path
 
@@ -181,11 +182,11 @@ ssm/ssm/ssm_superpose.h
         n_updated += 1
     if (source is not None):
       open(tpath, "wb").write(source)
-  print "Directories created:", n_makedirs
-  print "Files copied:", n_copied
-  print "Files updated:", n_updated
-  print "Files already up-to-date:", n_already_up_to_date
-  print "Done."
+  print("Directories created:", n_makedirs)
+  print("Files copied:", n_copied)
+  print("Files updated:", n_updated)
+  print("Files already up-to-date:", n_already_up_to_date)
+  print("Done.")
 
 if (__name__ == "__main__"):
   run(args=sys.argv[1:])
