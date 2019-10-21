@@ -2,6 +2,7 @@
 # here for future reference
 
 from __future__ import division
+from __future__ import print_function
 import ccp4io_dev_ext
 import scitbx.fftpack
 from scitbx.array_family import flex
@@ -104,7 +105,7 @@ def show_complete_true_false_cc(nu, nv, nw, recycled, verbose):
     x=recycled[0][:nuvw].as_double(),
     y=recycled[1][:nuvw].as_double())
   if (verbose):
-    print "dims:", (nu,nv,nw), "complete=true,false cc:", corr.coefficient()
+    print("dims:", (nu,nv,nw), "complete=true,false cc:", corr.coefficient())
 
 def exercise_fftlib_real_complex_3d_real_imag_w_given_dims(
       mt, nu, nv, nw, verbose):
@@ -183,7 +184,7 @@ def run(args):
   compare_fftpack_with_hermft_1d()
   exercise_fftlib_real_complex_3d_real_imag_w(verbose=verbose)
   compare_large_3d_real_imag_w_complete_true_false(verbose=verbose)
-  print format_cpu_times()
+  print(format_cpu_times())
 
 if (__name__ == "__main__"):
   run(args=sys.argv[1:])

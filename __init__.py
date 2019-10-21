@@ -1,4 +1,5 @@
 from __future__ import division
+from __future__ import print_function
 import boost.python
 ext = boost.python.import_ext("ccp4io_adaptbx_ext")
 from ccp4io_adaptbx_ext import *
@@ -42,7 +43,7 @@ def to_mmdb(root, flags = [], remove_duplicates = True):
       rc = manager.PutPDBString( atom.format_atom_record() )
 
       if 0 < rc:
-        raise RuntimeError, mmdb.GetErrorDescription( rc )
+        raise RuntimeError(mmdb.GetErrorDescription( rc ))
 
   return manager
 
@@ -97,9 +98,8 @@ class SecondaryStructureMatching(object):
         )
 
       if manager.GetSelLength( selHnd = handle ) <= 0:
-        raise RuntimeError, (
-          "Empty atom selection for structure %s" % ( len( self.managers ) + 1 )
-          )
+        raise RuntimeError(
+          "Empty atom selection for structure %s" % ( len( self.managers ) + 1 ))
 
       self.chains.append( chain )
       self.managers.append( manager )
@@ -119,7 +119,7 @@ class SecondaryStructureMatching(object):
       selHnd2 = self.handles[1],
       )
     if rc != ssm.RETURN_CODE.Ok:
-      raise RuntimeError, ssm.GetErrorDescription( rc = rc )
+      raise RuntimeError(ssm.GetErrorDescription( rc = rc ))
 
     self.qvalues = self.ssm.GetQvalues()
 
@@ -131,7 +131,7 @@ class SecondaryStructureMatching(object):
 
   def AlignSelectedMatch(self, nselected):
     if nselected >= len(self.qvalues):
-        print "Not that many matches available"
+        print("Not that many matches available")
         return
 
     rc = self.ssm.AlignSelectedMatch(
@@ -144,7 +144,7 @@ class SecondaryStructureMatching(object):
       nselected = nselected
       )
     if rc != ssm.RETURN_CODE.Ok:
-      raise RuntimeError, ssm.GetErrorDescription( rc = rc )
+      raise RuntimeError(ssm.GetErrorDescription( rc = rc ))
 
 
 
@@ -253,14 +253,14 @@ class SSMMultipleAlignment(object):
   def __init__(self, managers, selstrings):
 
     if len( managers ) != len( selstrings ):
-      raise ValueError, "Iterables are not the same length"
+      raise ValueError("Iterables are not the same length")
 
     multalign = ssm.MultipleAlignment( managers = managers, selstrings = selstrings )
 
     if multalign.get_return_code() != ssm.MALIGN.Ok:
-      raise RuntimeError, ssm.GetMultAlignErrorDescription(
+      raise RuntimeError(ssm.GetMultAlignErrorDescription(
         rc = multalign.get_return_code(),
-        )
+        ))
 
     self.alignment = multalign.get_alignment()
     self.t_matrices = multalign.get_matrices()
