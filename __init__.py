@@ -1,7 +1,7 @@
 from __future__ import division
 from __future__ import print_function
-import boost.python
-ext = boost.python.import_ext("ccp4io_adaptbx_ext")
+import boost_adaptbx.boost.python as bp
+ext = bp.import_ext("ccp4io_adaptbx_ext")
 from ccp4io_adaptbx_ext import *
 
 import libtbx.load_env
@@ -271,4 +271,3 @@ class SSMMultipleAlignment(object):
   def rt_matrices(self):
 
     return [ reformat_ssm_t_matrix( mx = mx ) for mx in self.t_matrices ]
-
