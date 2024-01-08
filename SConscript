@@ -50,6 +50,8 @@ def replace_printf(file_name):
 
 env = env_base.Clone(
   SHLINKFLAGS=env_etc.shlinkflags)
+if sys.platform == 'darwin':
+  env.Append(CFLAGS=['-Wno-error=implicit-function-declaration'])
 env.Append(CCFLAGS=env_etc.ccp4io_defines)
 env.Append(SHCCFLAGS=env_etc.ccp4io_defines)
 env_etc.include_registry.append(
@@ -80,12 +82,13 @@ ccp4_unitcell.c
 cvecmat.c
 cmtzlib.c
 """.splitlines()])
-open(op.join(build_ccp4io_adaptbx, "csymlib.c"), "w").write(
-  open(op.join(path_lib_src, "csymlib.c")).read()
-    .replace(
-      "static int reported_syminfo = 0",
-      "static int reported_syminfo = 1"))
-source.append(op.join("#ccp4io_adaptbx", "csymlib.c"))
+if not libtbx.env.module_is_installed("ccp4io"):
+  open(op.join(build_ccp4io_adaptbx, "csymlib.c"), "w").write(
+    open(op.join(path_lib_src, "csymlib.c")).read()
+      .replace(
+        "static int reported_syminfo = 0",
+        "static int reported_syminfo = 1"))
+  source.append(op.join("#ccp4io_adaptbx", "csymlib.c"))
 
 probe_file_name = op.join(path_lib_src, "cmaplib.h")
 env_etc.ccp4io_has_cmaplib = op.isfile(probe_file_name)
@@ -155,7 +158,7 @@ source.extend( [ op.join( ssm_prefix, f ) for f in ssm_sources ] )
 need_f_c = (
      libtbx.env.has_module("solve_resolve")
   or libtbx.env.find_in_repositories(relative_path="mosflm_fable"))
-if (need_f_c or os.name != "nt"):
+if need_f_c or os.name != "nt" and not libtbx.env.module_is_installed("ccp4io"):
   source.append(op.join("#ccp4io_adaptbx", "fortran_call_stubs.c"))
   for file_name in """\
 ccp4_diskio_f.c
@@ -175,21 +178,22 @@ library_f.c
   source.append(op.join("#ccp4io_adaptbx", "printf_wrappers.c"))
 
 # static library for solve_resolve
-env.StaticLibrary(target='#lib/ccp4io', source=source)
 env_etc.ccp4io_lib = "ccp4io"
 
-if (    libtbx.env.has_module("boost")
-    and not env_etc.no_boost_python):
-  Import( "env_no_includes_boost_python_ext" )
-  sources = [ "#ccp4io_adaptbx/ext.cpp" ]
-  env_ext = env_no_includes_boost_python_ext.Clone()
-  env_ext.Prepend( LIBS = "ccp4io" )
-  env_etc.include_registry.append(
-    env = env_ext,
-    paths = [
-      os.path.join( env_etc.ccp4io_dist),
-      env_etc.boost_include,
-      env_etc.python_include,
-      ]
-    )
-  env_ext.SharedLibrary( target = "#lib/ccp4io_adaptbx_ext", source = sources )
+if not libtbx.env.module_is_installed("ccp4io"):
+  env.StaticLibrary(target='#lib/ccp4io', source=source)
+  if (    libtbx.env.has_module("boost")
+      and not env_etc.no_boost_python):
+    Import( "env_no_includes_boost_python_ext" )
+    sources = [ "#ccp4io_adaptbx/ext.cpp" ]
+    env_ext = env_no_includes_boost_python_ext.Clone()
+    env_ext.Prepend( LIBS = "ccp4io" )
+    env_etc.include_registry.append(
+      env = env_ext,
+      paths = [
+        os.path.join( env_etc.ccp4io_dist),
+        env_etc.boost_include,
+        env_etc.python_include,
+        ]
+      )
+    env_ext.SharedLibrary( target = "#lib/ccp4io_adaptbx_ext", source = sources )
